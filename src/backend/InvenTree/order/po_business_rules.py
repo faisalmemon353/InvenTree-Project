@@ -15,7 +15,7 @@ from order.models import PurchaseOrder, PurchaseOrderLineItem
 from order.status_codes import PurchaseOrderStatus, PurchaseOrderStatusGroups
 from users.permissions import check_user_role
 
-MIN_ORDER_QUANTITY = Decimal('1')
+MIN_ORDER_QUANTITY = Decimal('0')
 MAX_ORDER_QUANTITY = Decimal('10000')
 MIN_DISCOUNT_PCT = Decimal('0')
 MAX_DISCOUNT_PCT = Decimal('100')
