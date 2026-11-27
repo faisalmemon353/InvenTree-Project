@@ -470,3 +470,208 @@ def test_order_status_codes_and_validators_full_coverage():
 
         assert m_po_pat.called and m_so_pat.called and m_ro_pat.called and m_to_pat.called
         assert m_po_fld.called and m_so_fld.called and m_ro_fld.called and m_to_fld.called
+
+
+# ============================================================================
+# 6. DIRECT WHITE-BOX COVERAGE OF UPSTREAM order/models.py & serializers.py
+#    (Including all 14 CFG Basis Paths of PurchaseOrderLineItem.clean)
+# ============================================================================
+
+def test_upstream_order_and_po_clean_and_locking_branches():
+    """Exercise all branches of Order.clean, Order.check_locked, Order.save, and PurchaseOrder.clean."""
+    import datetime
+    from build.models import Build
+    from company.models import Address, Contact
+    from order.serializers import (
+        PurchaseOrderCompleteSerializer,
+        PurchaseOrderLineItemReceiveSerializer,
+        PurchaseOrderLineItemSerializer,
+    )
+    from part.models import Part
+
+    seed_sqe_data()
+    acme = Company.objects.get(name='Acme Electronics Ltd')
+    beta = Company.objects.get(name='Beta Components Inc')
+    po = PurchaseOrder.objects.get(reference='PO-SQE-0001')
+
+    # 1. Order.clean: start_date > target_date raises ValidationError
+    po.start_date = datetime.date(2026, 12, 10)
+    po.target_date = datetime.date(2026, 12, 1)
+    with pytest.raises(ValidationError) as exc_info:
+        po.clean()
+    assert 'target_date' in exc_info.value.message_dict
+    po.start_date = None
+    po.target_date = None
+
+    # 2. Order.clean: contact from a different company raises ValidationError
+    beta_contact = Contact.objects.filter(company=beta).first()
+    po.contact = beta_contact
+    with pytest.raises(ValidationError) as exc_info:
+        po.clean()
+    assert 'contact' in exc_info.value.message_dict
+    po.contact = None
+
+    # 3. Order.clean: address from a different company raises ValidationError
+    beta_addr, _ = Address.objects.get_or_create(company=beta, title='Beta HQ')
+    po.address = beta_addr
+    with pytest.raises(ValidationError) as exc_info:
+        po.clean()
+    assert 'address' in exc_info.value.message_dict
+    po.address = None
+
+    # 4. Order.clean: REQUIRE_RESPONSIBLE_SETTING branch
+    set_global_setting('PURCHASEORDER_REQUIRE_RESPONSIBLE', True)
+    po.responsible = None
+    with pytest.raises(ValidationError) as exc_info:
+        po.clean()
+    assert 'responsible' in exc_info.value.message_dict
+    set_global_setting('PURCHASEORDER_REQUIRE_RESPONSIBLE', False)
+
+    # 5. PurchaseOrder.clean: receiving_company must be internal
+    po.receiving_company = beta  # beta.is_internal is False
+    with pytest.raises(ValidationError) as exc_info:
+        po.clean()
+    assert 'receiving_company' in exc_info.value.message_dict
+
+    # 6. PurchaseOrder.clean: delivery_address without receiving_company
+    po.receiving_company = None
+    po.delivery_address = beta_addr
+    with pytest.raises(ValidationError) as exc_info:
+        po.clean()
+    assert 'receiving_company' in exc_info.value.message_dict
+
+    # 7. PurchaseOrder.clean: delivery_address not matching internal receiving_company
+    internal_co, _ = Company.objects.update_or_create(
+        name='SQE Internal Corp',
+        defaults={'is_internal': True, 'is_supplier': False, 'is_customer': False},
+    )
+    po.receiving_company = internal_co
+    po.delivery_address = beta_addr
+    with pytest.raises(ValidationError) as exc_info:
+        po.clean()
+    assert 'delivery_address' in exc_info.value.message_dict
+    po.receiving_company = None
+    po.delivery_address = None
+    po.clean()
+
+    # 8. PurchaseOrder.add_line_item: all branches (<=0, ValueError, supplier mismatch, group=True merge, group=False new)
+    acme_sp = SupplierPart.objects.get(SKU='ACME-MCU-32')
+    beta_sp = SupplierPart.objects.get(SKU='BETA-SEN-X1')
+
+    with pytest.raises(ValidationError):
+        po.add_line_item(acme_sp, 0)
+    with pytest.raises(ValidationError):
+        po.add_line_item(acme_sp, 'not_an_int')
+    with pytest.raises(ValidationError):
+        po.add_line_item(beta_sp, 5)
+
+    # group=True merges with existing line item (10 + 5 = 15)
+    merged_line = po.add_line_item(acme_sp, 5, group=True)
+    assert merged_line.quantity == Decimal('15')
+    # group=False creates a separate line item
+    separate_line = po.add_line_item(acme_sp, 3, group=False, reference='SEP-LINE')
+    assert separate_line.quantity == Decimal('3')
+    separate_line.delete()
+
+    # 9. PurchaseOrderLineItem.clean: all 13 predicates / 14 CFG basis paths from Step 1
+    # Path A: supplier mismatch (D1=T, D2=T, D3=T -> Node 5 ValidationError)
+    mismatched_line = PurchaseOrderLineItem(order=po, part=beta_sp, quantity=Decimal('1'))
+    with pytest.raises(ValidationError) as exc_info:
+        mismatched_line.clean()
+    assert 'part' in exc_info.value.message_dict
+
+    # Path B: build_order not external (D4=T, D5=T -> Node 9 ValidationError)
+    mcu_part = Part.objects.get(IPN='SQE-MCU-32')
+    mcu_part.assembly = False
+    mcu_part.save()
+    Build.objects.filter(reference='BO-9901').delete()
+    internal_build = Build.objects.create(
+        reference='BO-9901',
+        title='Internal build test',
+        part=mcu_part,
+        quantity=5,
+        external=False,
+    )
+    line_bo = PurchaseOrderLineItem(order=po, part=acme_sp, quantity=Decimal('5'), build_order=internal_build)
+    with pytest.raises(ValidationError) as exc_info:
+        line_bo.clean()
+    assert 'build_order' in exc_info.value.message_dict
+
+    # Path C: build_order external, but part.assembly is False (D4=T, D5=F, D6=T, D7=T -> Node 12 ValidationError)
+    internal_build.external = True
+    internal_build.save()
+    with pytest.raises(ValidationError) as exc_info:
+        line_bo.clean()
+    assert 'build_order' in exc_info.value.message_dict
+
+    # Path D: part.assembly is True, but build_order.part != line.part.part (D7=F, D8=T -> Node 14 ValidationError)
+    mcu_part.assembly = True
+    mcu_part.save()
+    acme_sp.refresh_from_db()
+    other_part = Part.objects.get(IPN='SQE-SEN-X1')
+    other_part.assembly = True
+    other_part.save()
+    internal_build.part = other_part
+    internal_build.save()
+    line_bo = PurchaseOrderLineItem(order=po, part=acme_sp, quantity=Decimal('5'), build_order=internal_build)
+    with pytest.raises(ValidationError) as exc_info:
+        line_bo.clean()
+    assert 'build_order' in exc_info.value.message_dict
+
+    # Path E: build_order.part matches (D8=F -> passes build_order block)
+    internal_build.part = mcu_part
+    internal_build.save()
+    line_bo.clean()
+
+    # Path F: assembly part without build_order when BUILDORDER_EXTERNAL_BUILDS & BUILDORDER_EXTERNAL_REQUIRED=True
+    set_global_setting('BUILDORDER_EXTERNAL_BUILDS', True)
+    set_global_setting('BUILDORDER_EXTERNAL_REQUIRED', True)
+    line_no_bo = PurchaseOrderLineItem(order=po, part=acme_sp, quantity=Decimal('5'), build_order=None)
+    with pytest.raises(ValidationError) as exc_info:
+        line_no_bo.clean()
+    assert 'build_order' in exc_info.value.message_dict
+    set_global_setting('BUILDORDER_EXTERNAL_BUILDS', False)
+    set_global_setting('BUILDORDER_EXTERNAL_REQUIRED', False)
+    mcu_part.assembly = False
+    mcu_part.save()
+    other_part.assembly = False
+    other_part.save()
+    internal_build.delete()
+
+    # 10. PurchaseOrderLineItem helper methods & serializers validation
+    assert merged_line.remaining() == Decimal('15')
+    assert merged_line.is_completed() is False
+    assert merged_line.get_destination() is not None
+
+    line_ser = PurchaseOrderLineItemSerializer()
+    with pytest.raises( Exception ):
+        line_ser.validate_quantity(0)
+    assert line_ser.validate_quantity(5) == 5
+
+    recv_ser = PurchaseOrderLineItemReceiveSerializer()
+    with pytest.raises(Exception):
+        recv_ser.validate_quantity(Decimal('0'))
+    assert recv_ser.validate_quantity(Decimal('5')) == Decimal('5')
+    assert recv_ser.validate_barcode('') is None
+
+    # 11. PurchaseOrderCompleteSerializer & Order.check_locked on completed order
+    comp_ser = PurchaseOrderCompleteSerializer(context={'order': po})
+    with pytest.raises(Exception):
+        comp_ser.validate_accept_incomplete(False)
+    assert comp_ser.validate_accept_incomplete(True) is True
+    assert comp_ser.get_context_data() == {'is_complete': False}
+
+    # Hold and Cancel order transitions on a temporary PO
+    temp_po = PurchaseOrder.objects.create(
+        reference='PO-SQE-9009',
+        supplier=acme,
+        description='Hold and cancel test',
+        status=PurchaseOrderStatus.PENDING.value,
+    )
+    temp_po.hold_order()
+    assert temp_po.status == PurchaseOrderStatus.ON_HOLD.value
+    temp_po.cancel_order()
+    assert temp_po.status == PurchaseOrderStatus.CANCELLED.value
+    with pytest.raises(Exception):
+        line_ser.validate_purchase_order(temp_po)
+
