@@ -23,8 +23,15 @@ from pathlib import Path
 # Add InvenTree backend to sys.path
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BACKEND_DIR = REPO_ROOT / 'src' / 'backend' / 'InvenTree'
+CONFIG_DIR = REPO_ROOT / 'config'
 sys.path.insert(0, str(BACKEND_DIR))
 
+os.environ.setdefault('INVENTREE_SITE_URL', 'http://localhost:8000')
+os.environ.setdefault('INVENTREE_DB_ENGINE', 'sqlite3')
+os.environ.setdefault('INVENTREE_DB_NAME', str(CONFIG_DIR / 'inventree_sqe.sqlite3'))
+os.environ.setdefault('INVENTREE_MEDIA_ROOT', str(CONFIG_DIR / 'media'))
+os.environ.setdefault('INVENTREE_STATIC_ROOT', str(CONFIG_DIR / 'static'))
+os.environ.setdefault('INVENTREE_BACKUP_DIR', str(CONFIG_DIR / 'backup'))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'InvenTree.settings')
 
 import django  # noqa: E402
