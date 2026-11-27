@@ -1,0 +1,14 @@
+{
+  "workflow1_screen": {
+    "url": "/web/purchasing?a11y=after",
+    "violations_count": 0,
+    "passes_count": 41,
+    "violations": []
+  },
+  "workflow2_screen": {
+    "url": "/web/receive?a11y=after",
+    "violations_count": 0,
+    "passes_count": 41,
+    "violations": []
+  }
+}

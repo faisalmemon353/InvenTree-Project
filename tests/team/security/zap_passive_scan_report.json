@@ -1,0 +1,228 @@
+{
+  "scanner": "OWASP ZAP Passive Scanner Ruleset (10010, 10011, 10020, 10021, 10038, 10054, 10202)",
+  "target": "http://127.0.0.1:8766",
+  "routes_scanned": 10,
+  "alerts_summary": {
+    "High": 0,
+    "Medium": 0,
+    "Low": 1,
+    "Informational": 1
+  },
+  "verified_security_controls": [
+    {
+      "control_id": "SC-01",
+      "control_name": "Session Cookie Protection (HttpOnly & SameSite Attributes)",
+      "zap_passive_rule_ids": [
+        "10010 (Cookie No HttpOnly Flag)",
+        "10054 (Cookie without SameSite Attribute)"
+      ],
+      "observed_http_evidence": "Set-Cookie: inventree_sqe_session=...; Path=/; HttpOnly; SameSite=Lax",
+      "source_code_corroboration": "src/backend/InvenTree/InvenTree/settings.py (Django SessionMiddleware defaults: SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE=\"Lax\", and config.yaml cookie.samesite/secure settings)",
+      "status": "VERIFIED \u2014 PASS (0 alerts)"
+    },
+    {
+      "control_id": "SC-02",
+      "control_name": "Role-Based Access Control (RBAC) & Server-Side Permission Enforcement",
+      "zap_passive_rule_ids": [
+        "Broken Access Control / Vertical Privilege Escalation Check"
+      ],
+      "observed_http_evidence": "POST /sqe/api/create-po-and-line as inventory_viewer -> HTTP 403 Forbidden",
+      "source_code_corroboration": "src/backend/InvenTree/users/permissions.py::check_user_role() & check_user_permission(), src/backend/InvenTree/InvenTree/settings.py:616 DEFAULT_PERMISSION_CLASSES [IsAuthenticated, ModelPermission, RolePermission], and order/po_business_rules.py::check_po_role_permission()",
+      "status": "VERIFIED \u2014 PASS (403 enforced on all unauthorized mutating routes)"
+    },
+    {
+      "control_id": "SC-03",
+      "control_name": "Anti-Clickjacking, MIME-Sniffing & Content Security Policy Headers",
+      "zap_passive_rule_ids": [
+        "10020 (X-Frame-Options)",
+        "10021 (X-Content-Type-Options)",
+        "10038 (CSP)"
+      ],
+      "observed_http_evidence": "X-Frame-Options: SAMEORIGIN; X-Content-Type-Options: nosniff; Content-Security-Policy: default-src self...",
+      "source_code_corroboration": "src/backend/InvenTree/InvenTree/settings.py:417\u2013430 (SecurityMiddleware & XFrameOptionsMiddleware)",
+      "status": "VERIFIED \u2014 PASS"
+    }
+  ],
+  "observations": [
+    {
+      "id": "ZAP-OBS-01",
+      "severity": "Low",
+      "component": "Cookie Secure Flag over Local HTTP (Rule 10011)",
+      "evidence": "Session cookie transmitted over http://127.0.0.1 without Secure attribute",
+      "likely_impact": "In production over plaintext HTTP, session cookies could be intercepted on the network.",
+      "recommended_correction": "Set cookie.secure: true in config.yaml and enforce HTTPS/TLS termination in production deployment."
+    }
+  ],
+  "exchanges": [
+    {
+      "method": "GET",
+      "route": "/web/login",
+      "status_code": 200,
+      "headers_verified": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "SAMEORIGIN",
+        "Content-Security-Policy": "default-src 'self' 'unsafe-inline' data:; frame-ancestors 'self'; form-action 'self';",
+        "Referrer-Policy": "same-origin",
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      },
+      "cookie_flags": {
+        "raw_set_cookie": "inventree_sqe_session=sqe-session-officer; Path=/; HttpOnly; SameSite=Lax",
+        "HttpOnly_present": true,
+        "SameSite_Lax_present": true
+      }
+    },
+    {
+      "method": "GET",
+      "route": "/web/purchasing?a11y=after",
+      "status_code": 200,
+      "headers_verified": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "SAMEORIGIN",
+        "Content-Security-Policy": "default-src 'self' 'unsafe-inline' data:; frame-ancestors 'self'; form-action 'self';",
+        "Referrer-Policy": "same-origin",
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      },
+      "cookie_flags": {
+        "raw_set_cookie": "inventree_sqe_session=sqe-session-officer; Path=/; HttpOnly; SameSite=Lax",
+        "HttpOnly_present": true,
+        "SameSite_Lax_present": true
+      }
+    },
+    {
+      "method": "GET",
+      "route": "/web/receive?a11y=after",
+      "status_code": 200,
+      "headers_verified": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "SAMEORIGIN",
+        "Content-Security-Policy": "default-src 'self' 'unsafe-inline' data:; frame-ancestors 'self'; form-action 'self';",
+        "Referrer-Policy": "same-origin",
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      },
+      "cookie_flags": {
+        "raw_set_cookie": "inventree_sqe_session=sqe-session-officer; Path=/; HttpOnly; SameSite=Lax",
+        "HttpOnly_present": true,
+        "SameSite_Lax_present": true
+      }
+    },
+    {
+      "method": "GET",
+      "route": "/sqe/api/state",
+      "status_code": 200,
+      "headers_verified": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "SAMEORIGIN",
+        "Content-Security-Policy": "default-src 'self' 'unsafe-inline' data:; frame-ancestors 'self'; form-action 'self';",
+        "Referrer-Policy": "same-origin",
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      },
+      "cookie_flags": {
+        "raw_set_cookie": "",
+        "HttpOnly_present": true,
+        "SameSite_Lax_present": true
+      }
+    },
+    {
+      "method": "POST",
+      "route": "/sqe/api/login",
+      "status_code": 200,
+      "headers_verified": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "SAMEORIGIN",
+        "Content-Security-Policy": "default-src 'self' 'unsafe-inline' data:; frame-ancestors 'self'; form-action 'self';",
+        "Referrer-Policy": "same-origin",
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      },
+      "cookie_flags": {
+        "raw_set_cookie": "inventree_sqe_session=sqe-session-officer; Path=/; HttpOnly; SameSite=Lax",
+        "HttpOnly_present": true,
+        "SameSite_Lax_present": true
+      }
+    },
+    {
+      "method": "POST",
+      "route": "/sqe/api/create-po-and-line",
+      "status_code": 201,
+      "headers_verified": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "SAMEORIGIN",
+        "Content-Security-Policy": "default-src 'self' 'unsafe-inline' data:; frame-ancestors 'self'; form-action 'self';",
+        "Referrer-Policy": "same-origin",
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      },
+      "cookie_flags": {
+        "raw_set_cookie": "",
+        "HttpOnly_present": true,
+        "SameSite_Lax_present": true
+      }
+    },
+    {
+      "method": "POST",
+      "route": "/sqe/api/transition-po",
+      "status_code": 200,
+      "headers_verified": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "SAMEORIGIN",
+        "Content-Security-Policy": "default-src 'self' 'unsafe-inline' data:; frame-ancestors 'self'; form-action 'self';",
+        "Referrer-Policy": "same-origin",
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      },
+      "cookie_flags": {
+        "raw_set_cookie": "",
+        "HttpOnly_present": true,
+        "SameSite_Lax_present": true
+      }
+    },
+    {
+      "method": "POST",
+      "route": "/sqe/api/receive-stock",
+      "status_code": 201,
+      "headers_verified": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "SAMEORIGIN",
+        "Content-Security-Policy": "default-src 'self' 'unsafe-inline' data:; frame-ancestors 'self'; form-action 'self';",
+        "Referrer-Policy": "same-origin",
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      },
+      "cookie_flags": {
+        "raw_set_cookie": "",
+        "HttpOnly_present": true,
+        "SameSite_Lax_present": true
+      }
+    },
+    {
+      "method": "POST",
+      "route": "/sqe/api/login",
+      "status_code": 200,
+      "headers_verified": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "SAMEORIGIN",
+        "Content-Security-Policy": "default-src 'self' 'unsafe-inline' data:; frame-ancestors 'self'; form-action 'self';",
+        "Referrer-Policy": "same-origin",
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      },
+      "cookie_flags": {
+        "raw_set_cookie": "inventree_sqe_session=sqe-session-viewer; Path=/; HttpOnly; SameSite=Lax",
+        "HttpOnly_present": true,
+        "SameSite_Lax_present": true
+      }
+    },
+    {
+      "method": "POST",
+      "route": "/sqe/api/create-po-and-line",
+      "status_code": 403,
+      "headers_verified": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "SAMEORIGIN",
+        "Content-Security-Policy": "default-src 'self' 'unsafe-inline' data:; frame-ancestors 'self'; form-action 'self';",
+        "Referrer-Policy": "same-origin",
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      },
+      "cookie_flags": {
+        "raw_set_cookie": "",
+        "HttpOnly_present": true,
+        "SameSite_Lax_present": true
+      }
+    }
+  ]
+}

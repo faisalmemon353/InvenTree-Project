@@ -1,0 +1,46 @@
+{
+  "tool": "Google Lighthouse (Chromium)",
+  "url": "http://127.0.0.1:8765/web/purchasing?a11y=before",
+  "scores": {
+    "accessibility": 68,
+    "best_practices": 92,
+    "seo": 82
+  },
+  "failed_audits": [
+    {
+      "id": "html-has-lang",
+      "title": "<html> element does not have a [lang] attribute",
+      "element": "<html>",
+      "user_impact": "Screen readers cannot determine the page language pronunciation rules.",
+      "proposed_fix": "Add lang=\"en\" to the root <html> element."
+    },
+    {
+      "id": "image-alt",
+      "title": "Image elements do not have [alt] attributes",
+      "element": "header .brand img",
+      "user_impact": "Blind users using screen readers hear the raw data URI instead of the brand purpose.",
+      "proposed_fix": "Add alt=\"InvenTree Purchasing Module Logo\" to the header brand <img>."
+    },
+    {
+      "id": "button-name",
+      "title": "Buttons do not have an accessible name",
+      "element": "button#btn-icon-refresh",
+      "user_impact": "Assistive technology announces \"button, blank\" without explaining what clicking it does.",
+      "proposed_fix": "Add aria-label=\"Refresh Purchase Orders and Stock Balances\" and visible text."
+    },
+    {
+      "id": "label",
+      "title": "Form elements do not have associated labels",
+      "element": "input#input-po-reference, select#input-po-supplier, input#input-line-quantity, input#input-line-discount",
+      "user_impact": "Screen reader and voice-control users cannot identify which field each input represents.",
+      "proposed_fix": "Replace unlinked <span> tags with explicit <label for=\"input-...\"> elements."
+    },
+    {
+      "id": "color-contrast",
+      "title": "Background and foreground colors do not have a sufficient contrast ratio",
+      "element": "span#active-role-badge (color: #b5b5b5 on #ffffff, contrast ratio 2.02:1 < 4.5:1 WCAG AA)",
+      "user_impact": "Low-vision users cannot read the active role status indicator.",
+      "proposed_fix": "Change badge colors to #ffffff on #0b5394 (contrast ratio 8.15:1 >= 4.5:1 WCAG AA)."
+    }
+  ]
+}

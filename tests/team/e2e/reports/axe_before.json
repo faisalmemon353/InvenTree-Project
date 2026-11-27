@@ -1,0 +1,114 @@
+{
+  "url": "/web/purchasing?a11y=before",
+  "violations_count": 6,
+  "violations": [
+    {
+      "id": "button-name",
+      "impact": "critical",
+      "description": "Ensure buttons have discernible text",
+      "help": "Buttons must have discernible text",
+      "nodes_count": 1,
+      "targets": [
+        [
+          "#btn-icon-refresh"
+        ]
+      ]
+    },
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "nodes_count": 1,
+      "targets": [
+        [
+          "#active-role-badge"
+        ]
+      ]
+    },
+    {
+      "id": "html-has-lang",
+      "impact": "serious",
+      "description": "Ensure every HTML document has a lang attribute",
+      "help": "<html> element must have a lang attribute",
+      "nodes_count": 1,
+      "targets": [
+        [
+          "html"
+        ]
+      ]
+    },
+    {
+      "id": "image-alt",
+      "impact": "critical",
+      "description": "Ensure <img> elements have alternative text or a role of none or presentation",
+      "help": "Images must have alternative text",
+      "nodes_count": 1,
+      "targets": [
+        [
+          "img"
+        ]
+      ]
+    },
+    {
+      "id": "label",
+      "impact": "critical",
+      "description": "Ensure every form element has a label",
+      "help": "Form elements must have labels",
+      "nodes_count": 8,
+      "targets": [
+        [
+          "#input-po-reference"
+        ],
+        [
+          "#input-line-quantity"
+        ],
+        [
+          "#input-line-discount"
+        ],
+        [
+          "#input-action-po-id"
+        ],
+        [
+          "#input-recv-po-ref"
+        ],
+        [
+          "#input-recv-quantity"
+        ],
+        [
+          "#input-recv-batch"
+        ],
+        [
+          "#input-recv-barcode"
+        ]
+      ]
+    },
+    {
+      "id": "select-name",
+      "impact": "critical",
+      "description": "Ensure select element has an accessible name",
+      "help": "Select element must have an accessible name",
+      "nodes_count": 6,
+      "targets": [
+        [
+          "#input-po-supplier"
+        ],
+        [
+          "#input-po-currency"
+        ],
+        [
+          "#input-line-part"
+        ],
+        [
+          "#input-line-merge"
+        ],
+        [
+          "#input-recv-location"
+        ],
+        [
+          "#input-recv-status"
+        ]
+      ]
+    }
+  ]
+}

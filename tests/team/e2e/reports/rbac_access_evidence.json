@@ -1,0 +1,44 @@
+[
+  {
+    "check_id": "RBAC-01",
+    "role": "purchasing_officer",
+    "action": "POST /sqe/api/create-po-and-line (Create PO-3601)",
+    "expected_result": "ALLOWED (HTTP 201 Created)",
+    "observed_result": "ALLOWED (Confirmation banner shown, PO-3601 created in status 10)"
+  },
+  {
+    "check_id": "RBAC-02",
+    "role": "purchasing_officer",
+    "action": "POST /sqe/api/receive-stock (Receive 4 units on PO-SQE-0002)",
+    "expected_result": "ALLOWED (HTTP 201 Created)",
+    "observed_result": "ALLOWED (StockItem balance updated to 4 units)"
+  },
+  {
+    "check_id": "RBAC-03",
+    "role": "inventory_viewer",
+    "action": "GET /sqe/api/state (View Purchase Orders and Stock Balances)",
+    "expected_result": "ALLOWED (HTTP 200 OK)",
+    "observed_result": "ALLOWED (PO table and stock balances rendered in UI)"
+  },
+  {
+    "check_id": "RBAC-04",
+    "role": "inventory_viewer",
+    "action": "POST /sqe/api/create-po-and-line (Attempt to create PO-3699)",
+    "expected_result": "DENIED (HTTP 403 Forbidden)",
+    "observed_result": "DENIED (HTTP 403 Forbidden error alert displayed; PO-3699 not created)"
+  },
+  {
+    "check_id": "RBAC-05",
+    "role": "inventory_viewer",
+    "action": "POST /sqe/api/transition-po (Attempt to issue PO-SQE-0001)",
+    "expected_result": "DENIED (HTTP 403 Forbidden)",
+    "observed_result": "DENIED (HTTP 403 Forbidden error alert; PO-SQE-0001 remains in status 10)"
+  },
+  {
+    "check_id": "RBAC-06",
+    "role": "inventory_viewer",
+    "action": "POST /sqe/api/receive-stock (Attempt to receive stock)",
+    "expected_result": "DENIED (HTTP 403 Forbidden)",
+    "observed_result": "DENIED (HTTP 403 Forbidden error alert; Stock balance unchanged)"
+  }
+]

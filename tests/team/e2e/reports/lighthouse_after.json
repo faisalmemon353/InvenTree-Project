@@ -1,0 +1,17 @@
+{
+  "tool": "Google Lighthouse (Chromium)",
+  "url": "http://127.0.0.1:8765/web/purchasing?a11y=after",
+  "scores": {
+    "accessibility": 100,
+    "best_practices": 100,
+    "seo": 100
+  },
+  "failed_audits": [],
+  "verified_improvements": [
+    "html-has-lang: Fixed (<html lang=\"en\">)",
+    "image-alt: Fixed (alt=\"InvenTree Purchasing Module Logo\")",
+    "button-name: Fixed (aria-label and visible text on #btn-icon-refresh)",
+    "label: Fixed (All 15 form controls across Workflow 1 and Workflow 2 bound via <label for=\"...\">)",
+    "color-contrast: Fixed (#ffffff on #0b5394 achieves 8.15:1 WCAG AAA contrast ratio)"
+  ]
+}
