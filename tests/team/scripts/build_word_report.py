@@ -172,6 +172,14 @@ def add_inline(par, text, size=12, bold=False):
 
 
 # ------------------------------------------------------------ chart assets
+DIAGRAM_OVERRIDE = EVID / "diagrams"
+
+
+def diagram(name: str) -> Path:
+    cand = DIAGRAM_OVERRIDE / f"{name}.png"
+    return cand if cand.exists() else SCRATCH / f"{name}.png"
+
+
 def make_assets():
     SCRATCH.mkdir(parents=True, exist_ok=True)
     plt.rcParams["font.family"] = "serif"
@@ -181,10 +189,10 @@ def make_assets():
     counts = [3, 2, 1, 1, 1]
     cum = [3, 5, 6, 7, 8]
     fig, ax = plt.subplots(figsize=(6.4, 3.6))
-    ax.bar(cats, counts, color="#bbbbbb", edgecolor="black")
+    ax.bar(cats, counts, color=["#2e86de", "#e67e22", "#27ae60", "#8e44ad", "#16a085"], edgecolor="black")
     ax.set_ylabel("Defect Count")
     ax.set_ylim(0, 8.5)
-    ax.plot(cats, cum, color="black", marker="o")
+    ax.plot(cats, cum, color="#c0392b", marker="o", lw=2)
     for i, v in enumerate(cum):
         ax.annotate(f"{v/8*100:.1f}%", (i, v), textcoords="offset points", xytext=(0, 6), ha="center", fontsize=8)
     ax.set_title("Pareto Analysis of Defects by Category")
@@ -193,21 +201,26 @@ def make_assets():
     plt.close(fig)
 
     def fishbone(path, effect, causes, title):
-        fig, ax = plt.subplots(figsize=(7.6, 4.2))
-        ax.set_xlim(0, 10)
+        fig, ax = plt.subplots(figsize=(9.4, 4.8))
+        ax.set_xlim(0, 11.6)
         ax.set_ylim(0, 6)
         ax.axis("off")
-        ax.annotate("", xy=(7.6, 3), xytext=(0.3, 3), arrowprops=dict(arrowstyle="-|>", lw=2, color="black"))
-        ax.text(7.7, 3, effect, va="center", ha="left", fontsize=8.5, weight="bold",
-                bbox=dict(boxstyle="square", fc="white", ec="black"))
-        pos = [(1.9, 5), (4.6, 5), (1.9, 1), (4.6, 1)]
-        for (x, y), (head, body) in zip(pos, causes):
-            ax.plot([x, x + 1.6], [y - (0.5 if y > 3 else -0.5), 3], color="black", lw=1.5)
-            ax.text(x - 0.3, y + (0.1 if y > 3 else -0.1), head, ha="left", va="bottom" if y > 3 else "top",
-                    fontsize=8.5, weight="bold", bbox=dict(boxstyle="square", fc="white", ec="black"))
-            ax.text(x - 0.3, y + (-0.45 if y > 3 else 0.45), body, ha="left", va="top" if y > 3 else "bottom",
-                    fontsize=6.8)
-        ax.set_title(title, fontsize=10)
+        ax.annotate("", xy=(8.2, 3), xytext=(0.3, 3), arrowprops=dict(arrowstyle="-|>", lw=2.5, color="#2c3e50"))
+        ax.text(8.3, 3, effect, va="center", ha="left", fontsize=9, weight="bold",
+                bbox=dict(boxstyle="round", fc="#f5b7b1", ec="#c0392b", lw=1.5))
+        cols = ["#aed6f1", "#abebc6", "#f9e79f", "#d7bde2"]
+        edges = ["#2874a6", "#1e8449", "#b7950b", "#76448a"]
+        pos = [(3.0, 5.2), (6.3, 5.2), (3.0, 0.8), (6.3, 0.8)]
+        for k, ((x, y), (head, body)) in enumerate(zip(pos, causes)):
+            top = y > 3
+            y_end = y - 0.35 if top else y + 0.35
+            ax.plot([x, x + 1.4], [y_end, 3], color=edges[k], lw=2.2)
+            ax.text(x, y, head, ha="center", va="center", fontsize=9, weight="bold",
+                    bbox=dict(boxstyle="round", fc=cols[k], ec=edges[k], lw=1.5))
+            ym = (y_end + 3) / 2
+            ax.text(x + 0.5, ym, body, ha="right", va="center", fontsize=7.2,
+                    bbox=dict(boxstyle="round,pad=0.25", fc="white", ec=edges[k], lw=0.8))
+        ax.set_title(title, fontsize=11)
         fig.tight_layout()
         fig.savefig(path, dpi=200)
         plt.close(fig)
@@ -244,37 +257,49 @@ def render_cfg(body, path):
         a, abr, lab, b, bbr = m.groups()
         reg(a, abr); reg(b, bbr)
         edges.append((a, b, lab or ""))
-    layer = {n: 0 for n in labels}
-    for _ in range(len(labels)):
-        for a, b, _l in edges:
-            if layer[b] < layer[a] + 1:
-                layer[b] = layer[a] + 1
-    bylayer = {}
-    for n in sorted(labels, key=lambda x: int(re.sub(r"\D", "", x) or 0)):
-        bylayer.setdefault(layer[n], []).append(n)
-    nl = max(bylayer) + 1
-    fig, ax = plt.subplots(figsize=(7.4, 10.2))
-    ax.set_xlim(0, 10); ax.set_ylim(0, nl); ax.axis("off")
+    num = lambda x: int(re.sub(r"\D", "", x) or 0)
+    order = sorted(labels, key=num)
+    nn = len(order)
     pos = {}
-    for l, ns in bylayer.items():
-        for k, n in enumerate(ns):
-            pos[n] = ((k + 1) * 10 / (len(ns) + 1), nl - l - 0.5)
+    for k, n in enumerate(order):
+        x = 1.7 if "raise" in labels[n].lower() else 5.6
+        pos[n] = (x, nn - k)
+    fig, ax = plt.subplots(figsize=(8.0, 11.0))
+    ax.set_xlim(-0.6, 9.4); ax.set_ylim(0, nn + 1); ax.axis("off")
     for a, b, lab in edges:
         (x1, y1), (x2, y2) = pos[a], pos[b]
-        ax.annotate("", xy=(x2, y2 + 0.22), xytext=(x1, y1 - 0.22),
-                    arrowprops=dict(arrowstyle="-|>", lw=0.7, color="black", shrinkA=0, shrinkB=0))
-        if lab:
-            ax.text((x1 + x2) / 2, (y1 + y2) / 2 + 0.02, lab, fontsize=5.5, ha="center",
-                    bbox=dict(fc="white", ec="none", pad=0.3))
+        col = "#1e8449" if lab == "True" else ("#c0392b" if lab == "False" else "#566573")
+        skip = abs(y1 - y2) > 1.5
+        rad = -0.35 if (x1 == x2 and skip and lab == "False") else 0.0
+        ax.annotate("", xy=(x2, y2 + 0.28), xytext=(x1, y1 - 0.28),
+                    arrowprops=dict(arrowstyle="-|>", lw=1.1, color=col, shrinkA=0, shrinkB=0,
+                                    connectionstyle=f"arc3,rad={rad}"))
+        if lab and not (x1 == x2 and skip):
+            ax.text((x1 + x2) / 2 + 0.25, (y1 + y2) / 2, lab, fontsize=7, color=col, ha="left", va="center",
+                    bbox=dict(fc="white", ec="none", pad=0.2))
     for n, (x, y) in pos.items():
-        txt = labels[n]
-        txt = re.sub(r"(.{26})\s", r"\1\n", txt)
-        style = {"d": "round,pad=0.25,rounding_size=0.3", "o": "round,pad=0.25,rounding_size=0.5", "b": "square,pad=0.25"}[shapes[n]]
-        ax.text(x, y, txt, ha="center", va="center", fontsize=5.6,
-                bbox=dict(boxstyle=style, fc="white" if shapes[n] != "d" else "#eeeeee", ec="black", lw=0.8))
+        txt = re.sub(r"(.{34})\s", r"\1\n", labels[n])
+        style = {"d": "round,pad=0.3,rounding_size=0.4", "o": "round,pad=0.3,rounding_size=0.6", "b": "square,pad=0.3"}[shapes[n]]
+        low = labels[n].lower()
+        if "raise" in low:
+            fc, ec = "#f5b7b1", "#c0392b"
+        elif shapes[n] == "d":
+            fc, ec = "#fcf3cf", "#b7950b"
+        elif shapes[n] == "o":
+            fc, ec = "#d5d8dc", "#2c3e50"
+        elif "entry" in low:
+            fc, ec = "#abebc6", "#1e8449"
+        else:
+            fc, ec = "#aed6f1", "#2874a6"
+        ax.text(x, y, txt, ha="center", va="center", fontsize=7.4, bbox=dict(boxstyle=style, fc=fc, ec=ec, lw=1.1))
+    ax.text(-0.4, nn + 0.6, "Legend:  green arrow = True branch   |   red arrow = False branch   |   grey arrow = sequential flow\n"
+            "yellow = decision node   |   red box = raise ValidationError   |   grey = unified EXIT", fontsize=7.2, va="top",
+            bbox=dict(boxstyle="round", fc="white", ec="#566573"))
+    ax.set_title("Control Flow Graph - PurchaseOrderLineItem.clean()", fontsize=11)
     fig.tight_layout()
     fig.savefig(path, dpi=220)
     plt.close(fig)
+
 
 # ----------------------------------------------------------- doc elements
 def add_heading(doc, text, level):
@@ -375,12 +400,12 @@ def render_markdown(doc, md_text, prefix, fig_counter):
                            3: "Fishbone diagram for DEF-03"}.get(mermaid_no)
                     if img:
                         fig_counter[0] += 1
-                        add_picture(doc, SCRATCH / img, cap, fig_counter[0], width=6.0)
+                        add_picture(doc, diagram(img[:-4]), cap, fig_counter[0], width=6.0)
                         continue
             if lang == "mermaid" and prefix == "03_":
                 render_cfg(body, SCRATCH / "cfg.png")
                 fig_counter[0] += 1
-                add_picture(doc, SCRATCH / "cfg.png", "Control Flow Graph of PurchaseOrderLineItem.clean()", fig_counter[0], width=6.2)
+                add_picture(doc, diagram("cfg"), "Control Flow Graph of PurchaseOrderLineItem.clean()", fig_counter[0], width=6.2)
                 continue
             add_code(doc, body)
             continue
@@ -521,7 +546,7 @@ def build():
             pp.paragraph_format.space_after = Pt(0)
             set_font(pp.add_run(txt), 12)
     for txt in ("SE-C", "Software Quality Engineering (SE3002) - Fall 2026",
-                "Submitted to: Course Instructor"):
+                "Submitted to: Anum Kaleem"):
         pp = doc.add_paragraph()
         pp.alignment = WD_ALIGN_PARAGRAPH.CENTER
         pp.paragraph_format.space_before = Pt(14)

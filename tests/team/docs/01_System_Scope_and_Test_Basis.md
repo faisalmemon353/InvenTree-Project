@@ -6,8 +6,8 @@
 | Name | Roll Number | Owned Technical Area (Section 6) | GitHub Username |
 | :--- | :--- | :--- | :--- |
 | **Faisal** | `24I-3032` | **Area 1:** Static Analysis (SonarQube & CFG), White-Box Unit Testing (100% Stmt/Branch, MCC, MC/DC), Mutation Testing & CI Quality Gate | `faisalmemon353` |
-| **Hassan Zahid** | `24I-3011` | **Area 2:** OpenAPI Specification, Automated EP & 3-Point BVA Test Data Generator, API & Cross-Workflow Integration Testing | `hassanzahid-24i3011` |
-| **Salman Ahmed** | `24I-3004` | **Area 3:** Use Case Specifications (6 Total), Playwright E2E Automation, Usability & Accessibility (Lighthouse + axe-core), Defensive Security (OWASP ZAP + `pip-audit`) & Performance/Recovery (k6 + Fault Injection) | `salmanahmed-24i3004` |
+| **Hassan Zahid** | `24I-3011` | **Area 2:** OpenAPI Specification, Automated EP & 3-Point BVA Test Data Generator, API & Cross-Workflow Integration Testing | `Hassan-Zahid110` |
+| **Salman Ahmed** | `24I-3004` | **Area 3:** Use Case Specifications (6 Total), Playwright E2E Automation, Usability & Accessibility (Lighthouse + axe-core), Defensive Security (OWASP ZAP + `pip-audit`) & Performance/Recovery (k6 + Fault Injection) | `Salman-ahmed-2` |
 
 ---
 
