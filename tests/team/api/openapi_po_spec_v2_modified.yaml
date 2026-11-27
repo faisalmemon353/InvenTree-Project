@@ -1,0 +1,191 @@
+openapi: 3.0.3
+info:
+  title: InvenTree Purchasing & Stock Receipt Workflows API — Viva Constraint-Change Spec (v2)
+  version: 2.0.0-viva-demo
+  description: >
+    Modified OpenAPI 3.0.3 specification demonstrating two changed constraints per Section 2:
+    (1) PurchaseOrderLineItemCreate.quantity: minimum changed from 1 to 5, maximum from 10000 to 5000 (MOQ = 5).
+    (2) PurchaseOrderLineItemCreate.discount: maximum changed from 100 to 50 (Max discount cap = 50%).
+servers:
+  - url: http://localhost:8000
+
+paths:
+  /api/order/po/:
+    post:
+      operationId: createPurchaseOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrderCreate'
+      responses:
+        '201':
+          description: Created
+  /api/order/po-line/:
+    post:
+      operationId: createPurchaseOrderLineItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrderLineItemCreate'
+      responses:
+        '201':
+          description: Created
+  /api/order/po/{id}/receive/:
+    post:
+      operationId: receivePurchaseOrderStock
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrderReceiveRequest'
+      responses:
+        '201':
+          description: Created
+
+components:
+  schemas:
+    PurchaseOrderCreate:
+      type: object
+      required:
+        - supplier
+        - reference
+      properties:
+        supplier:
+          type: integer
+          minimum: 1
+          maximum: 999999
+          x-step: 1
+        reference:
+          type: string
+          minLength: 4
+          maxLength: 64
+          pattern: '^PO-[0-9]+$'
+        supplier_reference:
+          type: string
+          minLength: 1
+          maxLength: 64
+        description:
+          type: string
+          minLength: 1
+          maxLength: 250
+        order_currency:
+          type: string
+          enum:
+            - USD
+            - EUR
+            - GBP
+
+    PurchaseOrderLineItemCreate:
+      type: object
+      required:
+        - order
+        - part
+        - quantity
+      properties:
+        order:
+          type: integer
+          minimum: 1
+          maximum: 999999
+          x-step: 1
+        part:
+          type: integer
+          minimum: 1
+          maximum: 999999
+          x-step: 1
+        # CONSTRAINT CHANGE 1: minimum changed 1 -> 5, maximum changed 10000 -> 5000
+        quantity:
+          type: number
+          minimum: 5
+          maximum: 5000
+          x-step: 1
+        # CONSTRAINT CHANGE 2: maximum discount changed 100 -> 50
+        discount:
+          type: number
+          minimum: 0
+          maximum: 50
+          x-step: 0.01
+        purchase_price:
+          type: number
+          minimum: 0
+          maximum: 100000
+          x-step: 0.01
+        reference:
+          type: string
+          minLength: 1
+          maxLength: 100
+        notes:
+          type: string
+          minLength: 1
+          maxLength: 500
+        merge_items:
+          type: boolean
+
+    PurchaseOrderReceiveRequest:
+      type: object
+      required:
+        - items
+        - location
+      properties:
+        location:
+          type: integer
+          minimum: 1
+          maximum: 999999
+          x-step: 1
+        batch_code:
+          type: string
+          minLength: 1
+          maxLength: 100
+        items:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/PurchaseOrderLineItemReceive'
+
+    PurchaseOrderLineItemReceive:
+      type: object
+      required:
+        - line_item
+        - quantity
+      properties:
+        line_item:
+          type: integer
+          minimum: 1
+          maximum: 999999
+          x-step: 1
+        quantity:
+          type: number
+          minimum: 1
+          maximum: 10000
+          x-step: 1
+        status:
+          type: integer
+          enum:
+            - 10
+            - 50
+            - 55
+            - 60
+            - 65
+            - 70
+            - 85
+        batch_code:
+          type: string
+          minLength: 1
+          maxLength: 100
+        packaging:
+          type: string
+          minLength: 1
+          maxLength: 64
+        note:
+          type: string
+          minLength: 1
+          maxLength: 250
+        barcode:
+          type: string
+          minLength: 1
+          maxLength: 200

@@ -84,3 +84,15 @@ jobs:
           INVENTREE_BACKUP_DIR: '${{ github.workspace }}/config/backup'
         run: |
           python tests/team/mutation/run_mutation_analysis.py --min-score 90.0
+
+      - name: Gate 4 — OpenAPI Test Data Generator & API/Integration Tests
+        env:
+          INVENTREE_SITE_URL: 'http://localhost:8000'
+          INVENTREE_DB_ENGINE: 'sqlite3'
+          INVENTREE_DB_NAME: '${{ github.workspace }}/config/inventree_sqe.sqlite3'
+          INVENTREE_MEDIA_ROOT: '${{ github.workspace }}/config/media'
+          INVENTREE_STATIC_ROOT: '${{ github.workspace }}/config/static'
+          INVENTREE_BACKUP_DIR: '${{ github.workspace }}/config/backup'
+        run: |
+          python tests/team/api/generate_test_data.py --compare-v2
+          pytest -p no:django -p no:cov tests/team/api/test_po_workflows_api.py -v
