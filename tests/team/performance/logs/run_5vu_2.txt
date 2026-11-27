@@ -1,0 +1,245 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: D:\SQE Project\InvenTree\tests\team\performance\po_load_test.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 5 max VUs, 1m2s max duration (incl. graceful stop):
+              * steady_state_load: 5 looping VUs for 1m0s (gracefulStop: 2s)
+
+
+running (0m01.0s), 5/5 VUs, 7 complete and 0 interrupted iterations
+steady_state_load   [   2% ] 5 VUs  0m01.0s/1m0s
+
+running (0m02.0s), 5/5 VUs, 19 complete and 0 interrupted iterations
+steady_state_load   [   3% ] 5 VUs  0m02.0s/1m0s
+
+running (0m03.0s), 5/5 VUs, 29 complete and 0 interrupted iterations
+steady_state_load   [   5% ] 5 VUs  0m03.0s/1m0s
+
+running (0m04.0s), 5/5 VUs, 39 complete and 0 interrupted iterations
+steady_state_load   [   7% ] 5 VUs  0m04.0s/1m0s
+
+running (0m05.0s), 5/5 VUs, 51 complete and 0 interrupted iterations
+steady_state_load   [   8% ] 5 VUs  0m05.0s/1m0s
+
+running (0m06.0s), 5/5 VUs, 62 complete and 0 interrupted iterations
+steady_state_load   [  10% ] 5 VUs  0m06.0s/1m0s
+
+running (0m07.0s), 5/5 VUs, 73 complete and 0 interrupted iterations
+steady_state_load   [  12% ] 5 VUs  0m07.0s/1m0s
+
+running (0m08.0s), 5/5 VUs, 84 complete and 0 interrupted iterations
+steady_state_load   [  13% ] 5 VUs  0m08.0s/1m0s
+
+running (0m09.0s), 5/5 VUs, 89 complete and 0 interrupted iterations
+steady_state_load   [  15% ] 5 VUs  0m09.0s/1m0s
+
+running (0m10.0s), 5/5 VUs, 99 complete and 0 interrupted iterations
+steady_state_load   [  17% ] 5 VUs  0m10.0s/1m0s
+
+running (0m11.0s), 5/5 VUs, 111 complete and 0 interrupted iterations
+steady_state_load   [  18% ] 5 VUs  0m11.0s/1m0s
+
+running (0m12.0s), 5/5 VUs, 118 complete and 0 interrupted iterations
+steady_state_load   [  20% ] 5 VUs  0m12.0s/1m0s
+
+running (0m13.0s), 5/5 VUs, 126 complete and 0 interrupted iterations
+steady_state_load   [  22% ] 5 VUs  0m13.0s/1m0s
+
+running (0m14.0s), 5/5 VUs, 134 complete and 0 interrupted iterations
+steady_state_load   [  23% ] 5 VUs  0m14.0s/1m0s
+
+running (0m15.0s), 5/5 VUs, 142 complete and 0 interrupted iterations
+steady_state_load   [  25% ] 5 VUs  0m15.0s/1m0s
+
+running (0m16.0s), 5/5 VUs, 149 complete and 0 interrupted iterations
+steady_state_load   [  27% ] 5 VUs  0m16.0s/1m0s
+
+running (0m17.0s), 5/5 VUs, 156 complete and 0 interrupted iterations
+steady_state_load   [  28% ] 5 VUs  0m17.0s/1m0s
+
+running (0m18.0s), 5/5 VUs, 164 complete and 0 interrupted iterations
+steady_state_load   [  30% ] 5 VUs  0m18.0s/1m0s
+
+running (0m19.0s), 5/5 VUs, 172 complete and 0 interrupted iterations
+steady_state_load   [  32% ] 5 VUs  0m19.0s/1m0s
+
+running (0m20.0s), 5/5 VUs, 179 complete and 0 interrupted iterations
+steady_state_load   [  33% ] 5 VUs  0m20.0s/1m0s
+
+running (0m21.0s), 5/5 VUs, 187 complete and 0 interrupted iterations
+steady_state_load   [  35% ] 5 VUs  0m21.0s/1m0s
+
+running (0m22.0s), 5/5 VUs, 195 complete and 0 interrupted iterations
+steady_state_load   [  37% ] 5 VUs  0m22.0s/1m0s
+
+running (0m23.0s), 5/5 VUs, 203 complete and 0 interrupted iterations
+steady_state_load   [  38% ] 5 VUs  0m23.0s/1m0s
+
+running (0m24.0s), 5/5 VUs, 210 complete and 0 interrupted iterations
+steady_state_load   [  40% ] 5 VUs  0m24.0s/1m0s
+
+running (0m25.0s), 5/5 VUs, 217 complete and 0 interrupted iterations
+steady_state_load   [  42% ] 5 VUs  0m25.0s/1m0s
+
+running (0m26.0s), 5/5 VUs, 224 complete and 0 interrupted iterations
+steady_state_load   [  43% ] 5 VUs  0m26.0s/1m0s
+
+running (0m27.0s), 5/5 VUs, 231 complete and 0 interrupted iterations
+steady_state_load   [  45% ] 5 VUs  0m27.0s/1m0s
+
+running (0m28.0s), 5/5 VUs, 239 complete and 0 interrupted iterations
+steady_state_load   [  47% ] 5 VUs  0m28.0s/1m0s
+
+running (0m29.0s), 5/5 VUs, 246 complete and 0 interrupted iterations
+steady_state_load   [  48% ] 5 VUs  0m29.0s/1m0s
+
+running (0m30.0s), 5/5 VUs, 253 complete and 0 interrupted iterations
+steady_state_load   [  50% ] 5 VUs  0m30.0s/1m0s
+
+running (0m31.0s), 5/5 VUs, 259 complete and 0 interrupted iterations
+steady_state_load   [  52% ] 5 VUs  0m31.0s/1m0s
+
+running (0m32.0s), 5/5 VUs, 265 complete and 0 interrupted iterations
+steady_state_load   [  53% ] 5 VUs  0m32.0s/1m0s
+
+running (0m33.0s), 5/5 VUs, 271 complete and 0 interrupted iterations
+steady_state_load   [  55% ] 5 VUs  0m33.0s/1m0s
+
+running (0m34.0s), 5/5 VUs, 278 complete and 0 interrupted iterations
+steady_state_load   [  57% ] 5 VUs  0m34.0s/1m0s
+
+running (0m35.0s), 5/5 VUs, 284 complete and 0 interrupted iterations
+steady_state_load   [  58% ] 5 VUs  0m35.0s/1m0s
+
+running (0m36.0s), 5/5 VUs, 286 complete and 0 interrupted iterations
+steady_state_load   [  60% ] 5 VUs  0m36.0s/1m0s
+
+running (0m37.0s), 5/5 VUs, 293 complete and 0 interrupted iterations
+steady_state_load   [  62% ] 5 VUs  0m37.0s/1m0s
+
+running (0m38.0s), 5/5 VUs, 300 complete and 0 interrupted iterations
+steady_state_load   [  63% ] 5 VUs  0m38.0s/1m0s
+
+running (0m39.0s), 5/5 VUs, 308 complete and 0 interrupted iterations
+steady_state_load   [  65% ] 5 VUs  0m39.0s/1m0s
+
+running (0m40.0s), 5/5 VUs, 316 complete and 0 interrupted iterations
+steady_state_load   [  67% ] 5 VUs  0m40.0s/1m0s
+
+running (0m41.0s), 5/5 VUs, 324 complete and 0 interrupted iterations
+steady_state_load   [  68% ] 5 VUs  0m41.0s/1m0s
+
+running (0m42.0s), 5/5 VUs, 332 complete and 0 interrupted iterations
+steady_state_load   [  70% ] 5 VUs  0m42.0s/1m0s
+
+running (0m43.0s), 5/5 VUs, 339 complete and 0 interrupted iterations
+steady_state_load   [  72% ] 5 VUs  0m43.0s/1m0s
+
+running (0m44.0s), 5/5 VUs, 346 complete and 0 interrupted iterations
+steady_state_load   [  73% ] 5 VUs  0m44.0s/1m0s
+
+running (0m45.0s), 5/5 VUs, 354 complete and 0 interrupted iterations
+steady_state_load   [  75% ] 5 VUs  0m45.0s/1m0s
+
+running (0m46.0s), 5/5 VUs, 360 complete and 0 interrupted iterations
+steady_state_load   [  77% ] 5 VUs  0m46.0s/1m0s
+
+running (0m47.0s), 5/5 VUs, 368 complete and 0 interrupted iterations
+steady_state_load   [  78% ] 5 VUs  0m47.0s/1m0s
+
+running (0m48.0s), 5/5 VUs, 376 complete and 0 interrupted iterations
+steady_state_load   [  80% ] 5 VUs  0m48.0s/1m0s
+
+running (0m49.0s), 5/5 VUs, 383 complete and 0 interrupted iterations
+steady_state_load   [  82% ] 5 VUs  0m49.0s/1m0s
+
+running (0m50.0s), 5/5 VUs, 391 complete and 0 interrupted iterations
+steady_state_load   [  83% ] 5 VUs  0m50.0s/1m0s
+
+running (0m51.0s), 5/5 VUs, 398 complete and 0 interrupted iterations
+steady_state_load   [  85% ] 5 VUs  0m51.0s/1m0s
+
+running (0m52.0s), 5/5 VUs, 404 complete and 0 interrupted iterations
+steady_state_load   [  87% ] 5 VUs  0m52.0s/1m0s
+
+running (0m53.0s), 5/5 VUs, 412 complete and 0 interrupted iterations
+steady_state_load   [  88% ] 5 VUs  0m53.0s/1m0s
+
+running (0m54.0s), 5/5 VUs, 419 complete and 0 interrupted iterations
+steady_state_load   [  90% ] 5 VUs  0m54.0s/1m0s
+
+running (0m55.0s), 5/5 VUs, 425 complete and 0 interrupted iterations
+steady_state_load   [  92% ] 5 VUs  0m55.0s/1m0s
+
+running (0m56.0s), 5/5 VUs, 431 complete and 0 interrupted iterations
+steady_state_load   [  93% ] 5 VUs  0m56.0s/1m0s
+
+running (0m57.0s), 5/5 VUs, 438 complete and 0 interrupted iterations
+steady_state_load   [  95% ] 5 VUs  0m57.0s/1m0s
+
+running (0m58.0s), 5/5 VUs, 444 complete and 0 interrupted iterations
+steady_state_load   [  97% ] 5 VUs  0m58.0s/1m0s
+
+running (0m59.0s), 5/5 VUs, 450 complete and 0 interrupted iterations
+steady_state_load   [  98% ] 5 VUs  0m59.0s/1m0s
+
+running (1m00.0s), 5/5 VUs, 456 complete and 0 interrupted iterations
+steady_state_load   [ 100% ] 5 VUs  1m0s
+
+
+  █ THRESHOLDS 
+
+    http_req_duration
+    ✓ 'p(95)<=500' p(95)=424.69ms
+
+    http_req_failed
+    ✓ 'rate<0.01' rate=0.00%
+
+    unexpected_failure_rate
+    ✓ 'rate<0.01' rate=0.00%
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 1383    22.80676/s
+    checks_succeeded...: 100.00% 1383 out of 1383
+    checks_failed......: 0.00%   0 out of 1383
+
+    ✓ GET /sqe/api/state HTTP 200
+    ✓ GET /sqe/api/state returns orders & stock
+    ✓ POST /sqe/api/create-po-and-line HTTP 201 Created
+
+    CUSTOM
+    po_workflow_latency_ms.........: avg=250.6ms  min=3.64ms   med=249.36ms max=1.05s p(90)=383.66ms p(95)=424.69ms
+    unexpected_failure_rate........: 0.00%  0 out of 922
+
+    HTTP
+    http_req_duration..............: avg=250.6ms  min=3.64ms   med=249.36ms max=1.05s p(90)=383.66ms p(95)=424.69ms
+      { expected_response:true }...: avg=250.6ms  min=3.64ms   med=249.36ms max=1.05s p(90)=383.66ms p(95)=424.69ms
+    http_req_failed................: 0.00%  0 out of 922
+    http_reqs......................: 922    15.204507/s
+
+    EXECUTION
+    iteration_duration.............: avg=654.44ms min=279.41ms med=662.05ms max=1.47s p(90)=812.72ms p(95)=846.57ms
+    iterations.....................: 461    7.602253/s
+    vus............................: 5      min=5        max=5
+    vus_max........................: 5      min=5        max=5
+
+    NETWORK
+    data_received..................: 1.1 MB 17 kB/s
+    data_sent......................: 207 kB 3.4 kB/s
+
+
+
+
+running (1m00.6s), 0/5 VUs, 461 complete and 0 interrupted iterations
+steady_state_load ✓ [ 100% ] 5 VUs  1m0s
+

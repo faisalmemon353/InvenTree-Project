@@ -1,0 +1,163 @@
+{
+    "metrics": {
+        "http_req_sending": {
+            "med": 0,
+            "max": 1.5086,
+            "p(90)": 0.5627699999999999,
+            "p(95)": 0.6287399999999994,
+            "avg": 0.0984186550976139,
+            "min": 0
+        },
+        "http_req_receiving": {
+            "p(95)": 5.704519999999994,
+            "avg": 1.5219567245119312,
+            "min": 0,
+            "med": 0.9242,
+            "max": 12.1494,
+            "p(90)": 4.208019999999999
+        },
+        "http_req_duration": {
+            "p(90)": 383.66694,
+            "p(95)": 424.69575999999995,
+            "avg": 250.60113937093288,
+            "min": 3.6452,
+            "med": 249.3653,
+            "max": 1055.7655,
+            "thresholds": {
+                "p(95)<=500": false
+            }
+        },
+        "http_reqs": {
+            "count": 922,
+            "rate": 15.204506599925063
+        },
+        "checks": {
+            "fails": 0,
+            "passes": 1383,
+            "value": 1
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 922,
+            "thresholds": {
+                "rate<0.01": false
+            },
+            "value": 0
+        },
+        "vus_max": {
+            "value": 5,
+            "min": 5,
+            "max": 5
+        },
+        "unexpected_failure_rate": {
+            "passes": 0,
+            "fails": 922,
+            "thresholds": {
+                "rate<0.01": false
+            },
+            "value": 0
+        },
+        "data_sent": {
+            "count": 206939,
+            "rate": 3412.5871922797096
+        },
+        "po_workflow_latency_ms": {
+            "avg": 250.60113937093288,
+            "min": 3.6452,
+            "med": 249.3653,
+            "max": 1055.7655,
+            "p(90)": 383.66694,
+            "p(95)": 424.69575999999995
+        },
+        "http_req_blocked": {
+            "p(95)": 1.7741549999999997,
+            "avg": 0.9985478308026035,
+            "min": 0,
+            "med": 0.993,
+            "max": 8.1991,
+            "p(90)": 1.3649499999999999
+        },
+        "http_req_connecting": {
+            "avg": 0.9023043383947948,
+            "min": 0,
+            "med": 0.7921,
+            "max": 8.1991,
+            "p(90)": 1.30924,
+            "p(95)": 1.5741999999999998
+        },
+        "data_received": {
+            "count": 1051841,
+            "rate": 17345.687013635332
+        },
+        "http_req_duration{expected_response:true}": {
+            "avg": 250.60113937093288,
+            "min": 3.6452,
+            "med": 249.3653,
+            "max": 1055.7655,
+            "p(90)": 383.66694,
+            "p(95)": 424.69575999999995
+        },
+        "http_req_waiting": {
+            "avg": 248.9807639913231,
+            "min": 2.0307,
+            "med": 247.20929999999998,
+            "max": 1053.9366,
+            "p(90)": 382.95590999999996,
+            "p(95)": 422.55080999999996
+        },
+        "iteration_duration": {
+            "med": 662.059,
+            "max": 1475.7355,
+            "p(90)": 812.7273,
+            "p(95)": 846.5749,
+            "avg": 654.4439147505427,
+            "min": 279.4101
+        },
+        "iterations": {
+            "rate": 7.602253299962531,
+            "count": 461
+        },
+        "vus": {
+            "max": 5,
+            "value": 5,
+            "min": 5
+        },
+        "http_req_tls_handshaking": {
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0,
+            "min": 0
+        }
+    },
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {
+                "GET /sqe/api/state HTTP 200": {
+                    "id": "f8ef86e49eb5d1b6394d05fb57f1f7b9",
+                    "passes": 461,
+                    "fails": 0,
+                    "name": "GET /sqe/api/state HTTP 200",
+                    "path": "::GET /sqe/api/state HTTP 200"
+                },
+                "GET /sqe/api/state returns orders & stock": {
+                    "name": "GET /sqe/api/state returns orders & stock",
+                    "path": "::GET /sqe/api/state returns orders & stock",
+                    "id": "316968bf01109b44749e1d2568bb67fe",
+                    "passes": 461,
+                    "fails": 0
+                },
+                "POST /sqe/api/create-po-and-line HTTP 201 Created": {
+                    "fails": 0,
+                    "name": "POST /sqe/api/create-po-and-line HTTP 201 Created",
+                    "path": "::POST /sqe/api/create-po-and-line HTTP 201 Created",
+                    "id": "51a978265ee76cbf39b2a2decfa7e654",
+                    "passes": 461
+                }
+            }
+    }
+}

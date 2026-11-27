@@ -1,0 +1,75 @@
+{
+  "target_operation": "GET /sqe/api/state & POST /sqe/api/create-po-and-line (Purchase Order & Stock State Cycle)",
+  "tool": "Grafana k6 v2.2.0",
+  "steady_state_duration_sec": 60,
+  "thresholds": {
+    "p95_ms_max": 500.0,
+    "failure_rate_pct_max": 1.0
+  },
+  "runs": [
+    {
+      "run_id": "Run-1A (1-VU #1)",
+      "slug": "run_1vu_1",
+      "vus": 1,
+      "duration_sec": 60,
+      "total_requests": 480,
+      "rps": 8.0,
+      "avg_ms": 48.65,
+      "median_ms": 64.72,
+      "p95_ms": 101.83,
+      "max_ms": 356.13,
+      "failure_pct": 0.0,
+      "verdict": "PASS"
+    },
+    {
+      "run_id": "Run-1B (1-VU #2)",
+      "slug": "run_1vu_2",
+      "vus": 1,
+      "duration_sec": 60,
+      "total_requests": 420,
+      "rps": 6.99,
+      "avg_ms": 66.4,
+      "median_ms": 69.34,
+      "p95_ms": 168.08,
+      "max_ms": 1691.52,
+      "failure_pct": 0.0,
+      "verdict": "PASS"
+    },
+    {
+      "run_id": "Run-2A (5-VU #1)",
+      "slug": "run_5vu_1",
+      "vus": 5,
+      "duration_sec": 60,
+      "total_requests": 1224,
+      "rps": 20.27,
+      "avg_ms": 169.62,
+      "median_ms": 159.92,
+      "p95_ms": 337.3,
+      "max_ms": 796.04,
+      "failure_pct": 0.0,
+      "verdict": "PASS"
+    },
+    {
+      "run_id": "Run-2B (5-VU #2)",
+      "slug": "run_5vu_2",
+      "vus": 5,
+      "duration_sec": 60,
+      "total_requests": 922,
+      "rps": 15.2,
+      "avg_ms": 250.6,
+      "median_ms": 249.37,
+      "p95_ms": 424.7,
+      "max_ms": 1055.77,
+      "failure_pct": 0.0,
+      "verdict": "PASS"
+    }
+  ],
+  "aggregates": {
+    "1vu_mean_p95_ms": 134.96,
+    "1vu_mean_rps": 7.5,
+    "1vu_mean_failure_pct": 0.0,
+    "5vu_mean_p95_ms": 381.0,
+    "5vu_mean_rps": 17.73,
+    "5vu_mean_failure_pct": 0.0
+  }
+}

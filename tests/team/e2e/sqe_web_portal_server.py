@@ -549,14 +549,15 @@ class SQEPortalHandler(BaseHTTPRequestHandler):
 
         if parsed.path == '/sqe/api/state':
             orders_data = []
-            for po in PurchaseOrder.objects.all().order_by('pk'):
-                first_line = po.lines.first()
+            for po in PurchaseOrder.objects.all().prefetch_related('lines').order_by('pk'):
+                lines_list = list(po.lines.all())
+                first_line = lines_list[0] if lines_list else None
                 orders_data.append({
                     'pk': po.pk,
                     'reference': po.reference,
                     'status': po.status,
                     'status_text': PurchaseOrderStatus.label(po.status),
-                    'line_count': po.lines.count(),
+                    'line_count': len(lines_list),
                     'line_quantity': float(first_line.quantity) if first_line else 0.0,
                     'line_received': float(first_line.received) if first_line else 0.0,
                     'total_price': float(po.total_price.amount) if po.total_price else 0.0,
