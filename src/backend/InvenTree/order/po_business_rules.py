@@ -123,7 +123,7 @@ def evaluate_stock_receipt_decision(
 
     Decision: D_recv = C1 and C2 and C3 and C4
     """
-    is_placed = order_status == PurchaseOrderStatus.PLACED.value
+    is_placed = order_status in (PurchaseOrderStatus.PLACED.value, PurchaseOrderStatus.ON_HOLD.value)
     if is_placed and line_matches_order and quantity_positive and has_destination:
         return True
     return False
