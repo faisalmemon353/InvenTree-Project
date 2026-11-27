@@ -1,0 +1,90 @@
+name: SQE Quality Gate (Section C - SonarQube, Unit Coverage, API & Mutation)
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  sqe-quality-gate:
+    name: SQE Quality Gate (Static Analysis, 100% Coverage & Mutation >= 90%)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: Install System Dependencies for WeasyPrint & InvenTree
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 libffi-dev libjpeg-dev libopenjp2-7-dev
+
+      - name: Install Backend & SQE Testing Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r src/backend/requirements.txt
+          pip install pytest pytest-django pytest-cov coverage mutmut requests pyyaml pip-audit
+
+      - name: Gate 1 — Static Analysis & Cyclomatic Complexity Threshold Check
+        run: |
+          python tests/team/scripts/verify_cfg_complexity.py
+
+      - name: Initialize SQLite Database & Seed Deterministic Synthetic Data
+        env:
+          INVENTREE_SITE_URL: 'http://localhost:8000'
+          INVENTREE_DB_ENGINE: 'sqlite3'
+          INVENTREE_DB_NAME: '${{ github.workspace }}/config/inventree_sqe.sqlite3'
+          INVENTREE_MEDIA_ROOT: '${{ github.workspace }}/config/media'
+          INVENTREE_STATIC_ROOT: '${{ github.workspace }}/config/static'
+          INVENTREE_BACKUP_DIR: '${{ github.workspace }}/config/backup'
+        run: |
+          python src/backend/InvenTree/manage.py migrate --noinput
+          python tests/team/scripts/seed_sqe_data.py
+          python tests/team/scripts/reset_sqe_data.py
+
+      - name: Gate 2 — White-Box Unit Tests & 100% Statement/Branch Coverage Gate
+        env:
+          INVENTREE_SITE_URL: 'http://localhost:8000'
+          INVENTREE_DB_ENGINE: 'sqlite3'
+          INVENTREE_DB_NAME: '${{ github.workspace }}/config/inventree_sqe.sqlite3'
+          INVENTREE_MEDIA_ROOT: '${{ github.workspace }}/config/media'
+          INVENTREE_STATIC_ROOT: '${{ github.workspace }}/config/static'
+          INVENTREE_BACKUP_DIR: '${{ github.workspace }}/config/backup'
+        run: |
+          pytest -p no:django tests/team/unit/test_whitebox_po_rules.py \
+            --cov=order.po_business_rules \
+            --cov=order.status_codes \
+            --cov=order.validators \
+            --cov-branch \
+            --cov-report=term-missing \
+            --cov-report=xml:coverage.xml \
+            --cov-fail-under=100
+
+      - name: Gate 3 — Mutation Analysis Quality Gate (Threshold >= 90%)
+        env:
+          INVENTREE_SITE_URL: 'http://localhost:8000'
+          INVENTREE_DB_ENGINE: 'sqlite3'
+          INVENTREE_DB_NAME: '${{ github.workspace }}/config/inventree_sqe.sqlite3'
+          INVENTREE_MEDIA_ROOT: '${{ github.workspace }}/config/media'
+          INVENTREE_STATIC_ROOT: '${{ github.workspace }}/config/static'
+          INVENTREE_BACKUP_DIR: '${{ github.workspace }}/config/backup'
+        run: |
+          python tests/team/mutation/run_mutation_analysis.py --min-score 90.0
