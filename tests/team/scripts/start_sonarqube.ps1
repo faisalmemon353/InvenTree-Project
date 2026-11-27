@@ -3,14 +3,20 @@
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "=== Step 1: Checking / Starting SonarQube Community Edition Container ===" -ForegroundColor Cyan
-$existing = docker ps -a --filter "name=sqe-sonarqube" --format "{{.Names}}"
-if (-not $existing) {
-    docker run -d --name sqe-sonarqube -p 9000:9000 sonarqube:community
-    Write-Host "Started new 'sqe-sonarqube' container on http://localhost:9000" -ForegroundColor Green
+Write-Host "=== Step 1: Checking / Starting SonarQube Container ===" -ForegroundColor Cyan
+$existing = docker ps -a --filter "name=^/sonarqube$" --format "{{.Names}}"
+if ($existing) {
+    docker start sonarqube | Out-Null
+    Write-Host "Started existing 'sonarqube' container on http://localhost:9000" -ForegroundColor Green
 } else {
-    docker start sqe-sonarqube | Out-Null
-    Write-Host "Started existing 'sqe-sonarqube' container on http://localhost:9000" -ForegroundColor Green
+    $sqeExisting = docker ps -a --filter "name=sqe-sonarqube" --format "{{.Names}}"
+    if (-not $sqeExisting) {
+        docker run -d --name sqe-sonarqube -p 9000:9000 sonarqube:community
+        Write-Host "Started new 'sqe-sonarqube' container on http://localhost:9000" -ForegroundColor Green
+    } else {
+        docker start sqe-sonarqube | Out-Null
+        Write-Host "Started existing 'sqe-sonarqube' container on http://localhost:9000" -ForegroundColor Green
+    }
 }
 
 Write-Host "Waiting for SonarQube server to report status UP at http://localhost:9000/api/system/status ..." -ForegroundColor Yellow
