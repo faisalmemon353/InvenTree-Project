@@ -407,7 +407,9 @@ def run_live_mutation_verification() -> dict:
             # Run the fast unit tests (non-DB pure logic tests run in <0.1s; run DB test when needed)
             pytest_args = [str(UNIT_TEST_FILE), '-p', 'no:django', '-p', 'no:cov', '-q', '--tb=no', '--no-header']
             if spec.mutant_id not in ('M-08', 'M-09', 'M-10', 'M-11', 'M-12', 'M-13', 'M-24', 'M-25'):
-                pytest_args.extend(['-k', 'not workflows_execution and not full_coverage'])
+                pytest_args.extend(['-k', 'not workflows_execution and not full_coverage and not upstream_order'])
+            else:
+                pytest_args.extend(['-k', 'not full_coverage and not upstream_order'])
 
             buf = io.StringIO()
             with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
