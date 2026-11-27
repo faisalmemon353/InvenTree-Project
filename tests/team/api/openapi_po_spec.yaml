@@ -1,0 +1,350 @@
+openapi: 3.0.3
+info:
+  title: InvenTree Purchasing & Stock Receipt Workflows API (SE3002 SQE Section C)
+  version: 1.0.0
+  description: >
+    OpenAPI 3.0.3 specification for InvenTree's Purchasing (order) module covering
+    Workflow 1 (Create & Issue Purchase Order) and Workflow 2 (Receive Stock Against Placed Purchase Order).
+    Maintained by Hassan Zahid (24I-3011).
+servers:
+  - url: http://localhost:8000
+    description: Local InvenTree SQE Test Server
+
+paths:
+  /api/order/po/:
+    get:
+      operationId: listPurchaseOrders
+      summary: List Purchase Orders
+      responses:
+        '200':
+          description: List of PurchaseOrder records
+    post:
+      operationId: createPurchaseOrder
+      summary: Create a new PurchaseOrder in PENDING (10) state
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrderCreate'
+      responses:
+        '201':
+          description: PurchaseOrder created
+        '400':
+          description: Validation error (EP / BVA boundary or reference pattern violation)
+        '403':
+          description: Role permission denied (BR-04)
+
+  /api/order/po/{id}/:
+    get:
+      operationId: getPurchaseOrder
+      summary: Retrieve a PurchaseOrder by ID (cross-workflow read-back)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 999999
+      responses:
+        '200':
+          description: PurchaseOrder details
+        '404':
+          description: Not found
+
+  /api/order/po-line/:
+    post:
+      operationId: createPurchaseOrderLineItem
+      summary: Add or merge a line item on an open PurchaseOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrderLineItemCreate'
+      responses:
+        '201':
+          description: Line item created or merged
+        '400':
+          description: Validation error (BR-01 quantity/discount limits or BR-04 supplier mismatch)
+        '403':
+          description: Role permission denied (BR-04)
+
+  /api/order/po/{id}/issue/:
+    post:
+      operationId: issuePurchaseOrder
+      summary: Transition PurchaseOrder from PENDING (10) or ON_HOLD (25) to PLACED (20)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 999999
+      responses:
+        '201':
+          description: PurchaseOrder transitioned to PLACED (20)
+        '400':
+          description: Disallowed state transition (BR-03)
+        '403':
+          description: Role permission denied (BR-04)
+
+  /api/order/po/{id}/hold/:
+    post:
+      operationId: holdPurchaseOrder
+      summary: Transition PurchaseOrder from PENDING (10) or PLACED (20) to ON_HOLD (25)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 999999
+      responses:
+        '201':
+          description: PurchaseOrder transitioned to ON_HOLD (25)
+        '400':
+          description: Disallowed state transition (BR-03)
+
+  /api/order/po/{id}/complete/:
+    post:
+      operationId: completePurchaseOrder
+      summary: Transition PurchaseOrder from PLACED (20) to COMPLETE (30)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 999999
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrderCompleteRequest'
+      responses:
+        '201':
+          description: PurchaseOrder transitioned to COMPLETE (30)
+        '400':
+          description: Disallowed state transition or incomplete lines without accept_incomplete=True
+
+  /api/order/po/{id}/cancel/:
+    post:
+      operationId: cancelPurchaseOrder
+      summary: Transition Open PurchaseOrder (10, 20, 25) to CANCELLED (40)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 999999
+      responses:
+        '201':
+          description: PurchaseOrder transitioned to CANCELLED (40)
+        '400':
+          description: Disallowed state transition from COMPLETE or CANCELLED
+
+  /api/order/po/{id}/receive/:
+    post:
+      operationId: receivePurchaseOrderStock
+      summary: Receive stock items against a PLACED (20) PurchaseOrder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 999999
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrderReceiveRequest'
+      responses:
+        '201':
+          description: StockItem records created and line.received incremented
+        '400':
+          description: Validation error (BR-01 quantity <= 0 or BR-02 order not PLACED / missing location)
+        '403':
+          description: Role permission denied (BR-04)
+
+components:
+  schemas:
+    PurchaseOrderCreate:
+      type: object
+      required:
+        - supplier
+        - reference
+      properties:
+        supplier:
+          type: integer
+          minimum: 1
+          maximum: 999999
+          x-step: 1
+          description: Primary key of active supplier Company (is_supplier=True)
+        reference:
+          type: string
+          minLength: 4
+          maxLength: 64
+          pattern: '^PO-[0-9]+$'
+          description: Unique PurchaseOrder reference matching PO-{ref:04d}
+        supplier_reference:
+          type: string
+          minLength: 1
+          maxLength: 64
+          description: Optional supplier quotation/order reference code
+        description:
+          type: string
+          minLength: 1
+          maxLength: 250
+          description: Order description text
+        order_currency:
+          type: string
+          enum:
+            - USD
+            - EUR
+            - GBP
+          description: ISO-4217 currency code supported by InvenTree
+
+    PurchaseOrderLineItemCreate:
+      type: object
+      required:
+        - order
+        - part
+        - quantity
+      properties:
+        order:
+          type: integer
+          minimum: 1
+          maximum: 999999
+          x-step: 1
+          description: Primary key of open PurchaseOrder
+        part:
+          type: integer
+          minimum: 1
+          maximum: 999999
+          x-step: 1
+          description: Primary key of SupplierPart matching order.supplier
+        quantity:
+          type: number
+          minimum: 1
+          maximum: 10000
+          x-step: 1
+          description: Ordered item quantity (BR-01 lower bound 1, upper bound 10000)
+        discount:
+          type: number
+          minimum: 0
+          maximum: 100
+          x-step: 0.01
+          description: Discount percentage applied to line item (BR-01 bounds 0.00 to 100.00)
+        purchase_price:
+          type: number
+          minimum: 0
+          maximum: 100000
+          x-step: 0.01
+          description: Unit purchase price in order currency
+        reference:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Line item reference string
+        notes:
+          type: string
+          minLength: 1
+          maxLength: 500
+          description: Line item notes
+        merge_items:
+          type: boolean
+          description: Merge duplicate line items for same supplier part
+
+    PurchaseOrderCompleteRequest:
+      type: object
+      required:
+        - accept_incomplete
+      properties:
+        accept_incomplete:
+          type: boolean
+          description: Allow order completion when pending_line_count > 0
+
+    PurchaseOrderReceiveRequest:
+      type: object
+      required:
+        - items
+        - location
+      properties:
+        location:
+          type: integer
+          minimum: 1
+          maximum: 999999
+          x-step: 1
+          description: Destination StockLocation primary key
+        batch_code:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Batch code assigned to received stock items
+        items:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/PurchaseOrderLineItemReceive'
+
+    PurchaseOrderLineItemReceive:
+      type: object
+      required:
+        - line_item
+        - quantity
+      properties:
+        line_item:
+          type: integer
+          minimum: 1
+          maximum: 999999
+          x-step: 1
+          description: Primary key of PurchaseOrderLineItem belonging to the order
+        quantity:
+          type: number
+          minimum: 1
+          maximum: 10000
+          x-step: 1
+          description: Quantity of items to receive (BR-01 > 0, minimum 1 unit)
+        status:
+          type: integer
+          enum:
+            - 10
+            - 50
+            - 55
+            - 60
+            - 65
+            - 70
+            - 85
+          description: StockStatus code (10=OK, 50=ATTENTION, 55=DAMAGED, 60=DESTROYED, 65=REJECTED, 70=LOST, 85=QUARANTINED)
+        batch_code:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Per-line batch code
+        packaging:
+          type: string
+          minLength: 1
+          maxLength: 64
+          description: Packaging override text
+        note:
+          type: string
+          minLength: 1
+          maxLength: 250
+          description: Tracking event note
+        barcode:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Unique barcode string for received item

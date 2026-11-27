@@ -1,0 +1,1384 @@
+{
+  "spec_file": "openapi_po_spec.yaml",
+  "spec_title": "InvenTree Purchasing & Stock Receipt Workflows API (SE3002 SQE Section C)",
+  "spec_version": "1.0.0",
+  "summary": {
+    "schemas_processed": 5,
+    "total_ep_partitions_generated": 82,
+    "total_3point_bva_cases_generated": 117
+  },
+  "schemas": {
+    "PurchaseOrderCreate": {
+      "required_fields": [
+        "supplier",
+        "reference"
+      ],
+      "fields": {
+        "supplier": {
+          "type": "integer",
+          "constraints": {
+            "minimum": 1,
+            "maximum": 999999,
+            "step": 1
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": 500000,
+              "expected_valid": true
+            },
+            "invalid_below_min_partition": {
+              "value": -49,
+              "expected_valid": false
+            },
+            "invalid_above_max_partition": {
+              "value": 1000499,
+              "expected_valid": false
+            },
+            "invalid_type_partition": {
+              "value": "INVALID_NUMERIC_STRING",
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_boundary": {
+              "limit": 1,
+              "just_below_min": {
+                "value": 0,
+                "expected_valid": false
+              },
+              "at_min": {
+                "value": 1,
+                "expected_valid": true
+              },
+              "just_above_min": {
+                "value": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_boundary": {
+              "limit": 999999,
+              "just_below_max": {
+                "value": 999998,
+                "expected_valid": true
+              },
+              "at_max": {
+                "value": 999999,
+                "expected_valid": true
+              },
+              "just_above_max": {
+                "value": 1000000,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "reference": {
+          "type": "string",
+          "constraints": {
+            "minLength": 4,
+            "maxLength": 64,
+            "pattern": "^PO-[0-9]+$"
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": "PO-9999999999999",
+              "length": 16,
+              "expected_valid": true
+            },
+            "invalid_over_max_length_partition": {
+              "value": "PO-99999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+              "length": 89,
+              "expected_valid": false
+            },
+            "invalid_empty_string_partition": {
+              "value": "",
+              "length": 0,
+              "expected_valid": false
+            },
+            "invalid_pattern_mismatch_partition": {
+              "value": "INVALID_REF_FORMAT_###",
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_length_boundary": {
+              "limit": 4,
+              "just_below_min_length": {
+                "value": "PO-",
+                "length": 3,
+                "expected_valid": false
+              },
+              "at_min_length": {
+                "value": "PO-9",
+                "length": 4,
+                "expected_valid": true
+              },
+              "just_above_min_length": {
+                "value": "PO-99",
+                "length": 5,
+                "expected_valid": true
+              }
+            },
+            "upper_length_boundary": {
+              "limit": 64,
+              "just_below_max_length": {
+                "value": "PO-999999999999999999999999999999999999999999999999999999999999",
+                "length": 63,
+                "expected_valid": true
+              },
+              "at_max_length": {
+                "value": "PO-9999999999999999999999999999999999999999999999999999999999999",
+                "length": 64,
+                "expected_valid": true
+              },
+              "just_above_max_length": {
+                "value": "PO-99999999999999999999999999999999999999999999999999999999999999",
+                "length": 65,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "supplier_reference": {
+          "type": "string",
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": null
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": "XXXXXXXXXXXXXXXX",
+              "length": 16,
+              "expected_valid": true
+            },
+            "invalid_over_max_length_partition": {
+              "value": "SQE-SUPPLIER_REFERENCE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "length": 89,
+              "expected_valid": false
+            },
+            "invalid_empty_string_partition": {
+              "value": "",
+              "length": 0,
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_length_boundary": {
+              "limit": 1,
+              "just_below_min_length": {
+                "value": "",
+                "length": 0,
+                "expected_valid": false
+              },
+              "at_min_length": {
+                "value": "X",
+                "length": 1,
+                "expected_valid": true
+              },
+              "just_above_min_length": {
+                "value": "XX",
+                "length": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_length_boundary": {
+              "limit": 64,
+              "just_below_max_length": {
+                "value": "SQE-SUPPLIER_REFERENCE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 63,
+                "expected_valid": true
+              },
+              "at_max_length": {
+                "value": "SQE-SUPPLIER_REFERENCE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 64,
+                "expected_valid": true
+              },
+              "just_above_max_length": {
+                "value": "SQE-SUPPLIER_REFERENCE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 65,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "description": {
+          "type": "string",
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 250,
+            "pattern": null
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": "XXXXXXXXXXXXXXXX",
+              "length": 16,
+              "expected_valid": true
+            },
+            "invalid_over_max_length_partition": {
+              "value": "SQE-DESCRIPTION-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "length": 275,
+              "expected_valid": false
+            },
+            "invalid_empty_string_partition": {
+              "value": "",
+              "length": 0,
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_length_boundary": {
+              "limit": 1,
+              "just_below_min_length": {
+                "value": "",
+                "length": 0,
+                "expected_valid": false
+              },
+              "at_min_length": {
+                "value": "X",
+                "length": 1,
+                "expected_valid": true
+              },
+              "just_above_min_length": {
+                "value": "XX",
+                "length": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_length_boundary": {
+              "limit": 250,
+              "just_below_max_length": {
+                "value": "SQE-DESCRIPTION-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 249,
+                "expected_valid": true
+              },
+              "at_max_length": {
+                "value": "SQE-DESCRIPTION-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 250,
+                "expected_valid": true
+              },
+              "just_above_max_length": {
+                "value": "SQE-DESCRIPTION-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 251,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "order_currency": {
+          "type": "string_enum",
+          "constraints": {
+            "enum": [
+              "USD",
+              "EUR",
+              "GBP"
+            ]
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": "USD",
+              "expected_valid": true
+            },
+            "valid_all_enums": [
+              {
+                "value": "USD",
+                "expected_valid": true
+              },
+              {
+                "value": "EUR",
+                "expected_valid": true
+              },
+              {
+                "value": "GBP",
+                "expected_valid": true
+              }
+            ],
+            "invalid_enum_partition": {
+              "value": "INVALID_CURRENCY_XYZ",
+              "expected_valid": false
+            },
+            "invalid_empty_partition": {
+              "value": "",
+              "expected_valid": false
+            }
+          },
+          "bva_3point": null
+        }
+      }
+    },
+    "PurchaseOrderLineItemCreate": {
+      "required_fields": [
+        "order",
+        "part",
+        "quantity"
+      ],
+      "fields": {
+        "order": {
+          "type": "integer",
+          "constraints": {
+            "minimum": 1,
+            "maximum": 999999,
+            "step": 1
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": 500000,
+              "expected_valid": true
+            },
+            "invalid_below_min_partition": {
+              "value": -49,
+              "expected_valid": false
+            },
+            "invalid_above_max_partition": {
+              "value": 1000499,
+              "expected_valid": false
+            },
+            "invalid_type_partition": {
+              "value": "INVALID_NUMERIC_STRING",
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_boundary": {
+              "limit": 1,
+              "just_below_min": {
+                "value": 0,
+                "expected_valid": false
+              },
+              "at_min": {
+                "value": 1,
+                "expected_valid": true
+              },
+              "just_above_min": {
+                "value": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_boundary": {
+              "limit": 999999,
+              "just_below_max": {
+                "value": 999998,
+                "expected_valid": true
+              },
+              "at_max": {
+                "value": 999999,
+                "expected_valid": true
+              },
+              "just_above_max": {
+                "value": 1000000,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "part": {
+          "type": "integer",
+          "constraints": {
+            "minimum": 1,
+            "maximum": 999999,
+            "step": 1
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": 500000,
+              "expected_valid": true
+            },
+            "invalid_below_min_partition": {
+              "value": -49,
+              "expected_valid": false
+            },
+            "invalid_above_max_partition": {
+              "value": 1000499,
+              "expected_valid": false
+            },
+            "invalid_type_partition": {
+              "value": "INVALID_NUMERIC_STRING",
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_boundary": {
+              "limit": 1,
+              "just_below_min": {
+                "value": 0,
+                "expected_valid": false
+              },
+              "at_min": {
+                "value": 1,
+                "expected_valid": true
+              },
+              "just_above_min": {
+                "value": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_boundary": {
+              "limit": 999999,
+              "just_below_max": {
+                "value": 999998,
+                "expected_valid": true
+              },
+              "at_max": {
+                "value": 999999,
+                "expected_valid": true
+              },
+              "just_above_max": {
+                "value": 1000000,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "quantity": {
+          "type": "number",
+          "constraints": {
+            "minimum": 1,
+            "maximum": 10000,
+            "step": 1
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": 5000,
+              "expected_valid": true
+            },
+            "invalid_below_min_partition": {
+              "value": -49,
+              "expected_valid": false
+            },
+            "invalid_above_max_partition": {
+              "value": 10500,
+              "expected_valid": false
+            },
+            "invalid_type_partition": {
+              "value": "INVALID_NUMERIC_STRING",
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_boundary": {
+              "limit": 1,
+              "just_below_min": {
+                "value": 0,
+                "expected_valid": false
+              },
+              "at_min": {
+                "value": 1,
+                "expected_valid": true
+              },
+              "just_above_min": {
+                "value": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_boundary": {
+              "limit": 10000,
+              "just_below_max": {
+                "value": 9999,
+                "expected_valid": true
+              },
+              "at_max": {
+                "value": 10000,
+                "expected_valid": true
+              },
+              "just_above_max": {
+                "value": 10001,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "discount": {
+          "type": "number",
+          "constraints": {
+            "minimum": 0,
+            "maximum": 100,
+            "step": 0.01
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": 50,
+              "expected_valid": true
+            },
+            "invalid_below_min_partition": {
+              "value": -0.5,
+              "expected_valid": false
+            },
+            "invalid_above_max_partition": {
+              "value": 105,
+              "expected_valid": false
+            },
+            "invalid_type_partition": {
+              "value": "INVALID_NUMERIC_STRING",
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_boundary": {
+              "limit": 0,
+              "just_below_min": {
+                "value": -0.01,
+                "expected_valid": false
+              },
+              "at_min": {
+                "value": 0,
+                "expected_valid": true
+              },
+              "just_above_min": {
+                "value": 0.01,
+                "expected_valid": true
+              }
+            },
+            "upper_boundary": {
+              "limit": 100,
+              "just_below_max": {
+                "value": 99.99,
+                "expected_valid": true
+              },
+              "at_max": {
+                "value": 100,
+                "expected_valid": true
+              },
+              "just_above_max": {
+                "value": 100.01,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "purchase_price": {
+          "type": "number",
+          "constraints": {
+            "minimum": 0,
+            "maximum": 100000,
+            "step": 0.01
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": 50000,
+              "expected_valid": true
+            },
+            "invalid_below_min_partition": {
+              "value": -0.5,
+              "expected_valid": false
+            },
+            "invalid_above_max_partition": {
+              "value": 100005,
+              "expected_valid": false
+            },
+            "invalid_type_partition": {
+              "value": "INVALID_NUMERIC_STRING",
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_boundary": {
+              "limit": 0,
+              "just_below_min": {
+                "value": -0.01,
+                "expected_valid": false
+              },
+              "at_min": {
+                "value": 0,
+                "expected_valid": true
+              },
+              "just_above_min": {
+                "value": 0.01,
+                "expected_valid": true
+              }
+            },
+            "upper_boundary": {
+              "limit": 100000,
+              "just_below_max": {
+                "value": 99999.99,
+                "expected_valid": true
+              },
+              "at_max": {
+                "value": 100000,
+                "expected_valid": true
+              },
+              "just_above_max": {
+                "value": 100000.01,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "reference": {
+          "type": "string",
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": null
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": "SQE-REFERENCE-AA",
+              "length": 16,
+              "expected_valid": true
+            },
+            "invalid_over_max_length_partition": {
+              "value": "SQE-REFERENCE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "length": 125,
+              "expected_valid": false
+            },
+            "invalid_empty_string_partition": {
+              "value": "",
+              "length": 0,
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_length_boundary": {
+              "limit": 1,
+              "just_below_min_length": {
+                "value": "",
+                "length": 0,
+                "expected_valid": false
+              },
+              "at_min_length": {
+                "value": "X",
+                "length": 1,
+                "expected_valid": true
+              },
+              "just_above_min_length": {
+                "value": "XX",
+                "length": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_length_boundary": {
+              "limit": 100,
+              "just_below_max_length": {
+                "value": "SQE-REFERENCE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 99,
+                "expected_valid": true
+              },
+              "at_max_length": {
+                "value": "SQE-REFERENCE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 100,
+                "expected_valid": true
+              },
+              "just_above_max_length": {
+                "value": "SQE-REFERENCE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 101,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "notes": {
+          "type": "string",
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 500,
+            "pattern": null
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": "SQE-NOTES-AAAAAA",
+              "length": 16,
+              "expected_valid": true
+            },
+            "invalid_over_max_length_partition": {
+              "value": "SQE-NOTES-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "length": 525,
+              "expected_valid": false
+            },
+            "invalid_empty_string_partition": {
+              "value": "",
+              "length": 0,
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_length_boundary": {
+              "limit": 1,
+              "just_below_min_length": {
+                "value": "",
+                "length": 0,
+                "expected_valid": false
+              },
+              "at_min_length": {
+                "value": "X",
+                "length": 1,
+                "expected_valid": true
+              },
+              "just_above_min_length": {
+                "value": "XX",
+                "length": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_length_boundary": {
+              "limit": 500,
+              "just_below_max_length": {
+                "value": "SQE-NOTES-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 499,
+                "expected_valid": true
+              },
+              "at_max_length": {
+                "value": "SQE-NOTES-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 500,
+                "expected_valid": true
+              },
+              "just_above_max_length": {
+                "value": "SQE-NOTES-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 501,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "merge_items": {
+          "type": "boolean",
+          "constraints": {
+            "enum": [
+              true,
+              false
+            ]
+          },
+          "ep_classes": {
+            "valid_true": {
+              "value": true,
+              "expected_valid": true
+            },
+            "valid_false": {
+              "value": false,
+              "expected_valid": true
+            },
+            "invalid_boolean_string": {
+              "value": "NOT_A_BOOLEAN_VALUE",
+              "expected_valid": false
+            }
+          },
+          "bva_3point": null
+        }
+      }
+    },
+    "PurchaseOrderCompleteRequest": {
+      "required_fields": [
+        "accept_incomplete"
+      ],
+      "fields": {
+        "accept_incomplete": {
+          "type": "boolean",
+          "constraints": {
+            "enum": [
+              true,
+              false
+            ]
+          },
+          "ep_classes": {
+            "valid_true": {
+              "value": true,
+              "expected_valid": true
+            },
+            "valid_false": {
+              "value": false,
+              "expected_valid": true
+            },
+            "invalid_boolean_string": {
+              "value": "NOT_A_BOOLEAN_VALUE",
+              "expected_valid": false
+            }
+          },
+          "bva_3point": null
+        }
+      }
+    },
+    "PurchaseOrderReceiveRequest": {
+      "required_fields": [
+        "items",
+        "location"
+      ],
+      "fields": {
+        "location": {
+          "type": "integer",
+          "constraints": {
+            "minimum": 1,
+            "maximum": 999999,
+            "step": 1
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": 500000,
+              "expected_valid": true
+            },
+            "invalid_below_min_partition": {
+              "value": -49,
+              "expected_valid": false
+            },
+            "invalid_above_max_partition": {
+              "value": 1000499,
+              "expected_valid": false
+            },
+            "invalid_type_partition": {
+              "value": "INVALID_NUMERIC_STRING",
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_boundary": {
+              "limit": 1,
+              "just_below_min": {
+                "value": 0,
+                "expected_valid": false
+              },
+              "at_min": {
+                "value": 1,
+                "expected_valid": true
+              },
+              "just_above_min": {
+                "value": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_boundary": {
+              "limit": 999999,
+              "just_below_max": {
+                "value": 999998,
+                "expected_valid": true
+              },
+              "at_max": {
+                "value": 999999,
+                "expected_valid": true
+              },
+              "just_above_max": {
+                "value": 1000000,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "batch_code": {
+          "type": "string",
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": null
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": "SQE-BATCH_CODE-A",
+              "length": 16,
+              "expected_valid": true
+            },
+            "invalid_over_max_length_partition": {
+              "value": "SQE-BATCH_CODE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "length": 125,
+              "expected_valid": false
+            },
+            "invalid_empty_string_partition": {
+              "value": "",
+              "length": 0,
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_length_boundary": {
+              "limit": 1,
+              "just_below_min_length": {
+                "value": "",
+                "length": 0,
+                "expected_valid": false
+              },
+              "at_min_length": {
+                "value": "X",
+                "length": 1,
+                "expected_valid": true
+              },
+              "just_above_min_length": {
+                "value": "XX",
+                "length": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_length_boundary": {
+              "limit": 100,
+              "just_below_max_length": {
+                "value": "SQE-BATCH_CODE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 99,
+                "expected_valid": true
+              },
+              "at_max_length": {
+                "value": "SQE-BATCH_CODE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 100,
+                "expected_valid": true
+              },
+              "just_above_max_length": {
+                "value": "SQE-BATCH_CODE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 101,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "items": {
+          "type": "array",
+          "constraints": {
+            "minItems": 1,
+            "maxItems": 50
+          },
+          "ep_classes": {
+            "valid_single_item": {
+              "count": 1,
+              "expected_valid": true
+            },
+            "invalid_empty_array": {
+              "count": 0,
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_items_boundary": {
+              "limit": 1,
+              "just_below_min": {
+                "count": 0,
+                "expected_valid": false
+              },
+              "at_min": {
+                "count": 1,
+                "expected_valid": true
+              },
+              "just_above_min": {
+                "count": 2,
+                "expected_valid": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "PurchaseOrderLineItemReceive": {
+      "required_fields": [
+        "line_item",
+        "quantity"
+      ],
+      "fields": {
+        "line_item": {
+          "type": "integer",
+          "constraints": {
+            "minimum": 1,
+            "maximum": 999999,
+            "step": 1
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": 500000,
+              "expected_valid": true
+            },
+            "invalid_below_min_partition": {
+              "value": -49,
+              "expected_valid": false
+            },
+            "invalid_above_max_partition": {
+              "value": 1000499,
+              "expected_valid": false
+            },
+            "invalid_type_partition": {
+              "value": "INVALID_NUMERIC_STRING",
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_boundary": {
+              "limit": 1,
+              "just_below_min": {
+                "value": 0,
+                "expected_valid": false
+              },
+              "at_min": {
+                "value": 1,
+                "expected_valid": true
+              },
+              "just_above_min": {
+                "value": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_boundary": {
+              "limit": 999999,
+              "just_below_max": {
+                "value": 999998,
+                "expected_valid": true
+              },
+              "at_max": {
+                "value": 999999,
+                "expected_valid": true
+              },
+              "just_above_max": {
+                "value": 1000000,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "quantity": {
+          "type": "number",
+          "constraints": {
+            "minimum": 1,
+            "maximum": 10000,
+            "step": 1
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": 5000,
+              "expected_valid": true
+            },
+            "invalid_below_min_partition": {
+              "value": -49,
+              "expected_valid": false
+            },
+            "invalid_above_max_partition": {
+              "value": 10500,
+              "expected_valid": false
+            },
+            "invalid_type_partition": {
+              "value": "INVALID_NUMERIC_STRING",
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_boundary": {
+              "limit": 1,
+              "just_below_min": {
+                "value": 0,
+                "expected_valid": false
+              },
+              "at_min": {
+                "value": 1,
+                "expected_valid": true
+              },
+              "just_above_min": {
+                "value": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_boundary": {
+              "limit": 10000,
+              "just_below_max": {
+                "value": 9999,
+                "expected_valid": true
+              },
+              "at_max": {
+                "value": 10000,
+                "expected_valid": true
+              },
+              "just_above_max": {
+                "value": 10001,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "status": {
+          "type": "integer",
+          "constraints": {
+            "enum": [
+              10,
+              50,
+              55,
+              60,
+              65,
+              70,
+              85
+            ]
+          },
+          "ep_classes": {
+            "valid_enum_values": [
+              {
+                "value": 10,
+                "expected_valid": true
+              },
+              {
+                "value": 50,
+                "expected_valid": true
+              },
+              {
+                "value": 55,
+                "expected_valid": true
+              },
+              {
+                "value": 60,
+                "expected_valid": true
+              },
+              {
+                "value": 65,
+                "expected_valid": true
+              },
+              {
+                "value": 70,
+                "expected_valid": true
+              },
+              {
+                "value": 85,
+                "expected_valid": true
+              }
+            ],
+            "invalid_enum_value": {
+              "value": 1084,
+              "expected_valid": false
+            },
+            "invalid_type": {
+              "value": "NOT_A_NUMBER",
+              "expected_valid": false
+            }
+          },
+          "bva_3point": null
+        },
+        "batch_code": {
+          "type": "string",
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": null
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": "SQE-BATCH_CODE-A",
+              "length": 16,
+              "expected_valid": true
+            },
+            "invalid_over_max_length_partition": {
+              "value": "SQE-BATCH_CODE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "length": 125,
+              "expected_valid": false
+            },
+            "invalid_empty_string_partition": {
+              "value": "",
+              "length": 0,
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_length_boundary": {
+              "limit": 1,
+              "just_below_min_length": {
+                "value": "",
+                "length": 0,
+                "expected_valid": false
+              },
+              "at_min_length": {
+                "value": "X",
+                "length": 1,
+                "expected_valid": true
+              },
+              "just_above_min_length": {
+                "value": "XX",
+                "length": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_length_boundary": {
+              "limit": 100,
+              "just_below_max_length": {
+                "value": "SQE-BATCH_CODE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 99,
+                "expected_valid": true
+              },
+              "at_max_length": {
+                "value": "SQE-BATCH_CODE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 100,
+                "expected_valid": true
+              },
+              "just_above_max_length": {
+                "value": "SQE-BATCH_CODE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 101,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "packaging": {
+          "type": "string",
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": null
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": "SQE-PACKAGING-AA",
+              "length": 16,
+              "expected_valid": true
+            },
+            "invalid_over_max_length_partition": {
+              "value": "SQE-PACKAGING-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "length": 89,
+              "expected_valid": false
+            },
+            "invalid_empty_string_partition": {
+              "value": "",
+              "length": 0,
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_length_boundary": {
+              "limit": 1,
+              "just_below_min_length": {
+                "value": "",
+                "length": 0,
+                "expected_valid": false
+              },
+              "at_min_length": {
+                "value": "X",
+                "length": 1,
+                "expected_valid": true
+              },
+              "just_above_min_length": {
+                "value": "XX",
+                "length": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_length_boundary": {
+              "limit": 64,
+              "just_below_max_length": {
+                "value": "SQE-PACKAGING-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 63,
+                "expected_valid": true
+              },
+              "at_max_length": {
+                "value": "SQE-PACKAGING-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 64,
+                "expected_valid": true
+              },
+              "just_above_max_length": {
+                "value": "SQE-PACKAGING-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 65,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "note": {
+          "type": "string",
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 250,
+            "pattern": null
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": "SQE-NOTE-AAAAAAA",
+              "length": 16,
+              "expected_valid": true
+            },
+            "invalid_over_max_length_partition": {
+              "value": "SQE-NOTE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "length": 275,
+              "expected_valid": false
+            },
+            "invalid_empty_string_partition": {
+              "value": "",
+              "length": 0,
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_length_boundary": {
+              "limit": 1,
+              "just_below_min_length": {
+                "value": "",
+                "length": 0,
+                "expected_valid": false
+              },
+              "at_min_length": {
+                "value": "X",
+                "length": 1,
+                "expected_valid": true
+              },
+              "just_above_min_length": {
+                "value": "XX",
+                "length": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_length_boundary": {
+              "limit": 250,
+              "just_below_max_length": {
+                "value": "SQE-NOTE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 249,
+                "expected_valid": true
+              },
+              "at_max_length": {
+                "value": "SQE-NOTE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 250,
+                "expected_valid": true
+              },
+              "just_above_max_length": {
+                "value": "SQE-NOTE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 251,
+                "expected_valid": false
+              }
+            }
+          }
+        },
+        "barcode": {
+          "type": "string",
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 200,
+            "pattern": null
+          },
+          "ep_classes": {
+            "valid_nominal": {
+              "value": "SQE-BARCODE-AAAA",
+              "length": 16,
+              "expected_valid": true
+            },
+            "invalid_over_max_length_partition": {
+              "value": "SQE-BARCODE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "length": 225,
+              "expected_valid": false
+            },
+            "invalid_empty_string_partition": {
+              "value": "",
+              "length": 0,
+              "expected_valid": false
+            }
+          },
+          "bva_3point": {
+            "lower_length_boundary": {
+              "limit": 1,
+              "just_below_min_length": {
+                "value": "",
+                "length": 0,
+                "expected_valid": false
+              },
+              "at_min_length": {
+                "value": "X",
+                "length": 1,
+                "expected_valid": true
+              },
+              "just_above_min_length": {
+                "value": "XX",
+                "length": 2,
+                "expected_valid": true
+              }
+            },
+            "upper_length_boundary": {
+              "limit": 200,
+              "just_below_max_length": {
+                "value": "SQE-BARCODE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 199,
+                "expected_valid": true
+              },
+              "at_max_length": {
+                "value": "SQE-BARCODE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 200,
+                "expected_valid": true
+              },
+              "just_above_max_length": {
+                "value": "SQE-BARCODE-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "length": 201,
+                "expected_valid": false
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
