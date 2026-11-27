@@ -1,0 +1,50 @@
+<div class='splide'>
+    <div class='splide__track'>
+        <ul class='splide__list'>
+            {% for img in listimages(directory) %}
+            {% with src=img %}
+            {% include "splide_image.html" %}
+            {% endwith %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script>
+	// With navigation.instant, page content is swapped in without a new
+	// DOMContentLoaded event, so mount immediately if the document has loaded
+	(function () {
+	function mountCarousel() {
+
+        if (window.carouselInstance) {
+			window.carouselInstance.destroy();
+		}
+		window.carouselInstance = new Splide(
+            '.splide', {
+                type: 'loop',
+                perPage: {{ per_page }},
+                autoplay: true,
+                pagination: false,
+                // Each slide is as wide as its image, so that all images
+                // are scaled to the same height (set in extra.css)
+                autoWidth: true,
+                height: '{{ height | default("14rem") }}',
+                breakpoints: {
+                    // Narrow screens (e.g. mobile)
+                    700: {
+                        height: '{{ mobile_height | default("8rem") }}',
+                    },
+                },
+                gap: '1rem',
+                focus: 'center',
+            }
+        ).mount();
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', mountCarousel);
+	} else {
+		mountCarousel();
+	}
+	})();
+</script>

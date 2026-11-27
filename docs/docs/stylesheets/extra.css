@@ -1,0 +1,261 @@
+/* Image "popping" feature */
+.overlay {
+	/* Display over the entire page */
+	position: fixed;
+	z-index: 99;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.9) !important;
+
+	/* Horizontal and vertical centering of the image */
+	display: flex;
+	align-items: center;
+	text-align: center;
+
+	/* We hide all this by default */
+	visibility: hidden;
+
+	/* Animation */
+/*  opacity: 0;*/
+	transition: opacity .3s;
+}
+
+.image-inventree {
+	border-radius: 2px;
+	border: 1px solid #ddd;
+}
+
+.image-inventree>a>img.img-inline:hover {
+	opacity: 75%;
+}
+
+.overlay img {
+	/* Maximum image size */
+	max-width: 90%;
+	max-height: 90%;
+
+	/* We keep the ratio of the image */
+	width: auto;
+	height: auto;
+	margin: auto;
+
+	/* Animation */
+	transform: scale(0.95);
+	transition: transform .3s;
+}
+
+.overlay:target {
+	visibility: visible;
+	outline: none;
+	cursor: default;
+}
+
+.overlay:target img {
+	transform: scale(1);
+}
+
+/* Add icon after external links */
+/* Ignore auto-generated material theme links */
+a[target="_blank"]:not([class*="md-"]):after {
+/*	content: " " url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='rgb(123,136,204)' d='M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z' /%3E%3C/svg%3E%0A");*/
+	content: " " url('../assets/open-in-new-custom.svg');
+}
+
+/* Set text alignment to "justify" */
+p {
+	text-align: justify;
+}
+
+div:nth-of-type(1) p:not(.admonition-title) {
+	padding-top: 12px;
+}
+
+/* Use the theme code font (bootstrap.css otherwise overrides it) */
+.md-typeset code,
+.md-typeset kbd,
+.md-typeset pre {
+	font-family: var(--md-code-font-family);
+}
+
+/* Remove page title (Zensical inserts a skip-link anchor before the h1) */
+.md-content h1:first-child,
+.md-content #__skip + h1 {
+	display: none;
+}
+
+/* Remove top margin for first h2 header */
+.md-typeset h2:first-of-type {
+	margin-top: 0em;
+}
+
+.red {
+	color: #C55;
+}
+
+.green {
+	color: #5C5;
+}
+
+.blue {
+	color: #55C;
+}
+
+.badge.inventree {
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 14px;
+	font-weight: 400;
+	border-radius: 5px;
+	padding: 6px 12px;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.badge.inventree.nav.main {
+	background-color: #e7e7e7;
+	color: #777;
+	border-width: 0px;
+}
+
+.badge.inventree.nav.side {
+	background-color: #fff;
+	color: #337ab7;
+	border-color: #ddd;
+	font-size: 100%;
+	font-weight: 500;
+}
+
+.badge.inventree.add {
+	background-color: #449d44;
+	border-color: #398439;
+	color: #fff;
+}
+
+.badge.inventree.confirm {
+	background-color: #337ab7;
+	border-color: #2e6da4;
+	color: #fff;
+}
+
+.alert-version {
+	padding: 5px;
+	margin: 5px;
+	margin-bottom: 0px;
+}
+
+.badge.inventree.success {
+	background-color: #5cb85c;
+	color: #555;
+}
+
+.badge.inventree.warning {
+	background-color: #f0ad4e;
+	color: #555;
+}
+
+.badge.inventree.danger {
+	background-color: #d9534f;
+}
+
+.badge.inventree.info {
+	background-color: #5bc0de;
+	color: #555;
+}
+
+/* HTTP method badges for the generated API schema documentation */
+.api-method {
+	display: inline-block;
+	min-width: 4.2em;
+	padding: 0.1em 0.5em;
+	border-radius: 0.2rem;
+	color: #fff;
+	font-family: var(--md-code-font-family);
+	font-size: 0.75em;
+	font-weight: 700;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.api-method-get { background-color: #2b8a3e; }
+.api-method-post { background-color: #1971c2; }
+.api-method-put { background-color: #e67700; }
+.api-method-patch { background-color: #9c36b5; }
+.api-method-delete { background-color: #c92a2a; }
+.api-method-head, .api-method-options { background-color: #495057; }
+
+/* Image carousel: scale every image to the slide height, keeping aspect ratio */
+.splide__slide {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.splide__slide img {
+	height: 100%;
+	width: auto;
+	/* Very wide images shrink to fit the carousel on narrow screens */
+	max-width: calc(100vw - 2rem);
+	object-fit: contain;
+}
+
+/* Widen the page layout (theme default is 61rem), and keep ~5% horizontal
+ * padding so the content does not run to the window edges */
+.md-grid {
+	max-width: 80rem;
+	padding-left: 5%;
+	padding-right: 5%;
+}
+
+/* ...but not for grids nested inside page content (e.g. the home page hero) */
+.md-content .md-grid {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+/* Header colours match the inventree.org website (brown header, light text),
+ * rather than the documentation blue. The same colours are used in both light and dark mode */
+:root {
+	--iv-header-bg: #9e7d47;
+	--iv-header-text: #f9fafb;
+	--iv-header-muted: #e5e7eb;
+}
+
+.md-header,
+.md-tabs,
+.md-nav--primary .md-nav__title[for="__drawer"] {
+	--md-primary-fg-color: var(--iv-header-bg);
+	--md-primary-bg-color: var(--iv-header-text);
+	--md-primary-bg-color--light: var(--iv-header-muted);
+}
+
+/* Solid primary-colour header and navigation tabs, as in the classic theme.
+ * (The Zensical "modern" variant uses a translucent neutral header.) */
+.md-header,
+.md-tabs {
+	background-color: var(--md-primary-fg-color);
+	color: var(--md-primary-bg-color);
+}
+
+.md-header {
+	backdrop-filter: none;
+}
+
+/* Search button on the coloured header (darker box, light text) */
+.md-header .md-search__button {
+	background-color: rgba(0, 0, 0, 0.26);
+	color: var(--md-primary-bg-color);
+}
+
+.md-header .md-search__button:hover {
+	background-color: rgba(0, 0, 0, 0.32);
+}
+
+.md-header .md-search__button::before {
+	background-color: var(--md-primary-bg-color);
+}
+
+.md-header .md-search__button::after {
+	background-color: rgba(0, 0, 0, 0.2);
+	color: var(--md-primary-bg-color);
+}
