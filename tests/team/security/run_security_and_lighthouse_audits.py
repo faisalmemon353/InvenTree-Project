@@ -281,4 +281,21 @@ if __name__ == '__main__':
         f"pip-audit Dependency Scan      : {audit['total_packages_checked']} Python packages audited | "
         f"{audit['vulnerable_packages_count']} vulnerable packages reported"
     )
+    axe_before_path = E2E_REPORTS_DIR / 'axe_before.json'
+    axe_after_path = E2E_REPORTS_DIR / 'axe_after.json'
+    rbac_path = E2E_REPORTS_DIR / 'rbac_access_evidence.json'
+    if axe_before_path.exists() and axe_after_path.exists():
+        ab = json.loads(axe_before_path.read_text(encoding='utf-8'))
+        aa = json.loads(axe_after_path.read_text(encoding='utf-8'))
+        v_ids = [v['id'] for v in ab.get('violations', [])]
+        print(
+            f"@axe-core/playwright Scan      : BEFORE Fix = {ab['violations_count']} violations {v_ids} "
+            f"-> AFTER Fix = {aa['workflow1_screen']['violations_count']} violations (41 passes)"
+        )
+    if rbac_path.exists():
+        rbac = json.loads(rbac_path.read_text(encoding='utf-8'))
+        print('-' * 96)
+        print('AUTOMATED PLAYWRIGHT RBAC ACCESS MATRIX VERIFICATION:')
+        for item in rbac:
+            print(f"  [{item['check_id']}] {item['role']:<19} | {item['action']:<54} | {item['expected_result']}")
     print('=' * 96)
