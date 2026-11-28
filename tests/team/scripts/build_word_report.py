@@ -127,16 +127,44 @@ def clean_math(text: str) -> str:
         s = m.group(1)
         s = re.sub(r"\\text\{([^}]*)\}", r"\1", s)
         s = re.sub(r"\\mathbf\{([^}]*)\}", r"\1", s)
-        s = re.sub(r"\\frac\{([^}]*)\}\{([^}]*)\}", r"(\1)/(\2)", s)
-        s = re.sub(r"_\{([^}]*)\}", r"\1", s)
+        s = re.sub(r"\\frac\{([^}]*)\}\{([^}]*)\}", r"(\1 / \2)", s)
+        s = re.sub(r"_\{([^}]*)\}", r"_\1", s)
         s = re.sub(r"\^\{([^}]*)\}", r"^\1", s)
-        rep = {r"\le": "≤", r"\ge": "≥", r"\times": "×", r"\rightarrow": "→", r"\leftarrow": "←",
-               r"\approx": "≈", r"\cdot": "·", r"\quad": "  ", r"\%": "%", r"\;": " ", r"\,": " ",
-               r"\sum": "Σ", r"\ne": "≠", r"\to": "→", r"\ll": "<<", r"\pm": "±"}
+        rep = {
+            r"\land": " ∧ ",
+            r"\lor": " ∨ ",
+            r"\neg": "¬",
+            r"\le": "≤",
+            r"\ge": "≥",
+            r"\neq": "≠",
+            r"\ne": "≠",
+            r"\times": "×",
+            r"\rightarrow": "→",
+            r"\leftarrow": "←",
+            r"\to": "→",
+            r"\approx": "≈",
+            r"\cdot": "·",
+            r"\quad": "  ",
+            r"\%": "%",
+            r"\;": " ",
+            r"\,": " ",
+            r"\sum": "Σ",
+            r"\ll": "<<",
+            r"\pm": "±",
+            r"\delta": "δ",
+            r"\sigma": "σ",
+            r"\min": "min",
+            r"\max": "max",
+            r"\dots": "...",
+            r"\ldots": "...",
+        }
         for k in sorted(rep, key=len, reverse=True):
             s = s.replace(k, rep[k])
+        # Convert simple single-digit subscripts like C_1 -> C1 or p_95 -> p95
+        s = re.sub(r"\b([A-Za-z])_([A-Za-z0-9]+)\b", r"\1\2", s)
         s = s.replace("{", "").replace("}", "").replace("\\", "")
-        return s
+        s = re.sub(r"\s{2,}", " ", s)
+        return s.strip()
 
     text = re.sub(r"\$\$(.+?)\$\$", lambda m: conv(m), text)
     text = re.sub(r"\$([^$\n]+?)\$", lambda m: conv(m), text)
@@ -146,29 +174,34 @@ def clean_math(text: str) -> str:
 INLINE = re.compile(r"(\*\*[^*]+\*\*|`[^`]+`|\*[^*\s][^*]*\*)")
 
 
+def _emit_runs(par, seg: str, size=12, bold=False, italic=False):
+    for tok in INLINE.split(seg):
+        if not tok:
+            continue
+        if tok.startswith("**") and tok.endswith("**") and len(tok) > 4:
+            _emit_runs(par, tok[2:-2], size=size, bold=True, italic=italic)
+        elif tok.startswith("`") and tok.endswith("`") and len(tok) > 2:
+            inner = tok[1:-1].replace("`", "")
+            r = par.add_run(inner)
+            set_font(r, size, bold=bold, italic=italic)
+        elif tok.startswith("*") and tok.endswith("*") and len(tok) > 2:
+            _emit_runs(par, tok[1:-1], size=size, bold=bold, italic=True)
+        else:
+            clean_tok = tok.replace("`", "")
+            r = par.add_run(clean_tok)
+            set_font(r, size, bold=bold, italic=italic)
+
+
 def add_inline(par, text, size=12, bold=False):
     text = clean_math(text)
     text = re.sub(r"\[([^\]]+)\]\((?:file|http)[^)]*\)", r"\1", text)
     text = text.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">")
-    parts = text.split("<br/>") if "<br/>" in text else text.split("<br>")
+    text = re.sub(r"<br\s*/?>", "<br/>", text)
+    parts = text.split("<br/>")
     for pi, seg in enumerate(parts):
         if pi:
             par.add_run().add_break()
-        for tok in INLINE.split(seg):
-            if not tok:
-                continue
-            if tok.startswith("**") and tok.endswith("**") and len(tok) > 4:
-                r = par.add_run(tok[2:-2])
-                set_font(r, size, bold=True)
-            elif tok.startswith("`") and tok.endswith("`") and len(tok) > 2:
-                r = par.add_run(tok[1:-1])
-                set_font(r, size, bold=bold)
-            elif tok.startswith("*") and tok.endswith("*") and len(tok) > 2:
-                r = par.add_run(tok[1:-1])
-                set_font(r, size, italic=True, bold=bold)
-            else:
-                r = par.add_run(tok)
-                set_font(r, size, bold=bold)
+        _emit_runs(par, seg, size=size, bold=bold)
 
 
 # ------------------------------------------------------------ chart assets
@@ -342,17 +375,15 @@ def add_table(doc, rows):
             trpr.append(h)
         cs = OxmlElement("w:cantSplit")
         t.rows[ri]._tr.get_or_add_trPr().append(cs)
-    doc.add_paragraph().paragraph_format.space_after = Pt(2)
 
 
 def add_code(doc, lines):
-    for ln in lines:
+    for idx, ln in enumerate(lines):
         p = doc.add_paragraph()
-        p.paragraph_format.space_after = Pt(0)
+        p.paragraph_format.space_after = Pt(4 if idx == len(lines) - 1 else 0)
         p.paragraph_format.left_indent = Inches(0.2)
         r = p.add_run(ln if ln else " ")
         set_font(r, 9, name="Courier New")
-    doc.add_paragraph().paragraph_format.space_after = Pt(2)
 
 
 def add_picture(doc, path: Path, caption: str, num: int, width=6.2):
@@ -444,11 +475,21 @@ def render_markdown(doc, md_text, prefix, fig_counter):
         m = re.match(r"^(\s*)([-*]|\d+\.)\s+(.*)", ln)
         if m:
             indent = len(m.group(1)) // 2
-            numbered = m.group(2)[0].isdigit()
-            p = doc.add_paragraph(style="List Number" if numbered else "List Bullet")
-            p.paragraph_format.left_indent = Inches(0.35 + 0.3 * indent)
-            p.paragraph_format.space_after = Pt(2)
-            add_inline(p, m.group(3))
+            marker = m.group(2)
+            numbered = marker[0].isdigit()
+            if numbered:
+                p = doc.add_paragraph()
+                p.paragraph_format.left_indent = Inches(0.35 + 0.3 * indent)
+                p.paragraph_format.first_line_indent = Inches(-0.22)
+                p.paragraph_format.space_after = Pt(3)
+                r_num = p.add_run(f"{marker} ")
+                set_font(r_num, 12, bold=True)
+                add_inline(p, m.group(3))
+            else:
+                p = doc.add_paragraph(style="List Bullet")
+                p.paragraph_format.left_indent = Inches(0.35 + 0.3 * indent)
+                p.paragraph_format.space_after = Pt(2)
+                add_inline(p, m.group(3))
             i += 1
             continue
         if s.startswith(">"):
@@ -585,8 +626,13 @@ def build():
     settings.append(uf)
     doc.core_properties.title = "SE3002 SQE Final Project Report"
     doc.core_properties.author = "Hassan Zahid, Faisal Memon, Salman Ahmad"
-    doc.save(OUT)
-    print("Saved", OUT, f"({OUT.stat().st_size/1024/1024:.2f} MB), figures:", fig_counter[0])
+    try:
+        doc.save(OUT)
+        print("Saved", OUT, f"({OUT.stat().st_size/1024/1024:.2f} MB), figures:", fig_counter[0])
+    except PermissionError:
+        alt_out = OUT.with_name("Project_24I-3032_24I-3011_24I-3004_C_Updated.docx")
+        doc.save(alt_out)
+        print("Target file open in Word; saved to:", alt_out, f"({alt_out.stat().st_size/1024/1024:.2f} MB), figures:", fig_counter[0])
 
 
 if __name__ == "__main__":

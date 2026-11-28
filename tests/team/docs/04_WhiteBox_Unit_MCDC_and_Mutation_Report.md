@@ -1,8 +1,8 @@
-# Section 2.2: White-Box Unit Testing (100% Coverage, MCC & MC/DC), Mutation Analysis & CI Quality Gate
+# Chapter 4 (Project Rubric Sections 2.2 & 2.3): White-Box Unit Testing (100% Coverage, MCC & MC/DC), Mutation Analysis & CI Quality Gate
 
 **Course:** SE3002 — Software Quality Engineering (Final Project, Fall 2026)  
 **Section:** C  
-**Area 1 Owner:** Faisal (`24I-3032`)  
+**Area 1 Owner:** Faisal Memon (`24I-3032`)  
 **Test Suite Location:** `tests/team/unit/test_whitebox_po_rules.py` & `tests/team/mutation/run_mutation_analysis.py`
 
 ---

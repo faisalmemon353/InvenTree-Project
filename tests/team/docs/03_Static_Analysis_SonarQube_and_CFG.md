@@ -1,8 +1,8 @@
-# Section 2.1: Static Analysis (SonarQube) & Hand-Calculated Cyclomatic Complexity from CFG
+# Chapter 3 (Project Rubric Section 2.1): Static Analysis (SonarQube) & Hand-Calculated Cyclomatic Complexity from CFG
 
 **Course:** SE3002 — Software Quality Engineering (Final Project, Fall 2026)  
 **Section:** C  
-**Area 1 Owner:** Faisal (`24I-3032`)  
+**Area 1 Owner:** Faisal Memon (`24I-3032`)  
 **Target Module:** `src/backend/InvenTree/order/` (InvenTree Purchasing & Order Management Module)  
 **Baseline Commit:** `b686d7cb64e0b09644d9e9afb0ce4997dfde0c1d`
 

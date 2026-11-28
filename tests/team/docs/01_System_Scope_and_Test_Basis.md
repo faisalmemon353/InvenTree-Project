@@ -1,13 +1,13 @@
-# Section 1: System Selection, Test Scope & Test Basis
+# Chapter 1 (Project Rubric Section 1): System Selection, Test Scope & Test Basis
 
 **Course:** SE3002 — Software Quality Engineering (Final Project, Fall 2026)  
 **Section:** C  
 **Team Members:**
 | Name | Roll Number | Owned Technical Area (Section 6) | GitHub Username |
 | :--- | :--- | :--- | :--- |
-| **Faisal** | `24I-3032` | **Area 1:** Static Analysis (SonarQube & CFG), White-Box Unit Testing (100% Stmt/Branch, MCC, MC/DC), Mutation Testing & CI Quality Gate | `faisalmemon353` |
+| **Faisal Memon** | `24I-3032` | **Area 1:** Static Analysis (SonarQube & CFG), White-Box Unit Testing (100% Stmt/Branch, MCC, MC/DC), Mutation Testing & CI Quality Gate | `faisalmemon353` |
 | **Hassan Zahid** | `24I-3011` | **Area 2:** OpenAPI Specification, Automated EP & 3-Point BVA Test Data Generator, API & Cross-Workflow Integration Testing | `Hassan-Zahid110` |
-| **Salman Ahmed** | `24I-3004` | **Area 3:** Use Case Specifications (6 Total), Playwright E2E Automation, Usability & Accessibility (Lighthouse + axe-core), Defensive Security (OWASP ZAP + `pip-audit`) & Performance/Recovery (k6 + Fault Injection) | `Salman-ahmed-2` |
+| **Salman Ahmad** | `24I-3004` | **Area 3:** Use Case Specifications (6 Total), Playwright E2E Automation, Usability & Accessibility (Lighthouse + axe-core), Defensive Security (OWASP ZAP + `pip-audit`) & Performance/Recovery (k6 + Fault Injection) | `Salman-ahmed-2` |
 
 ---
 

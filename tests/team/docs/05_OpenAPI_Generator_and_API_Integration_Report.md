@@ -1,4 +1,4 @@
-# Section 2.3: OpenAPI Automated Test Data Generation & API / Integration Testing Report
+# Chapter 5 (Project Rubric Sections 2.4 & 2.5): OpenAPI Automated Test Data Generation & API / Integration Testing Report
 
 **Course:** SE3002 — Software Quality Engineering (Final Project, Fall 2026)  
 **Section:** C  

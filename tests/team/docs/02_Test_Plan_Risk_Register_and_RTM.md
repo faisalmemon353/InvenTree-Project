@@ -1,4 +1,4 @@
-# Section 2: Test Plan, Three-Point Estimation, Risk Register, Exit Criteria & Traceability Matrix
+# Chapter 2 (Project Rubric Section 4.1): Test Plan, Three-Point Estimation, Risk Register, Exit Criteria & Traceability Matrix
 
 **Course:** SE3002 — Software Quality Engineering (Final Project, Fall 2026)  
 **Section:** C  
@@ -34,9 +34,9 @@ Testing depth and technique selection are governed directly by the risk score ($
 ### 1.3 Team Roles & Area Ownership
 | Member | Roll No. | Primary Responsibilities | Backup / Peer Reviewer |
 | :--- | :--- | :--- | :--- |
-| **Faisal** | `24I-3032` | **Area 1 Owner:** SonarQube static analysis, CFG & Cyclomatic Complexity calculation, White-box unit testing (100% stmt/branch, MCC, MC/DC), `mutmut` mutation testing + 2 custom operators + 15 mutant analysis, GitHub Actions CI quality gate, Blocked PR & Fix PR. Co-author of Test Management. | Hassan Zahid |
-| **Hassan Zahid** | `24I-3011` | **Area 2 Owner:** OpenAPI 3.0 specification for PO & receipt endpoints, Python automated EP & 3-point BVA generator script, spec constraint-change demonstration, `pytest` + `requests` API & cross-workflow integration test suite, endpoint weakness analysis. Co-author of Test Management. | Salman Ahmed |
-| **Salman Ahmed** | `24I-3004` | **Area 3 Owner:** 6 Use Case specifications (2 per member) & Playwright E2E automation, Usability & Accessibility (keyboard navigation, Lighthouse + `@axe-core/playwright` before/after screen fix), Defensive Security (Access Matrix, Playwright RBAC checks, OWASP ZAP passive scan, `pip-audit`), Performance & Recovery (Grafana k6 1-VU & 5-VU runs, fault-injection recovery test). Co-author of Test Management. | Faisal |
+| **Faisal Memon** | `24I-3032` | **Area 1 Owner:** SonarQube static analysis, CFG & Cyclomatic Complexity calculation, White-box unit testing (100% stmt/branch, MCC, MC/DC), `mutmut` mutation testing + 2 custom operators + 15 mutant analysis, GitHub Actions CI quality gate, Blocked PR & Fix PR. Co-author of Test Management. | Hassan Zahid |
+| **Hassan Zahid** | `24I-3011` | **Area 2 Owner:** OpenAPI 3.0 specification for PO & receipt endpoints, Python automated EP & 3-point BVA generator script, spec constraint-change demonstration, `pytest` + `requests` API & cross-workflow integration test suite, endpoint weakness analysis. Co-author of Test Management. | Salman Ahmad |
+| **Salman Ahmad** | `24I-3004` | **Area 3 Owner:** 6 Use Case specifications (2 per member) & Playwright E2E automation, Usability & Accessibility (keyboard navigation, Lighthouse + `@axe-core/playwright` before/after screen fix), Defensive Security (Access Matrix, Playwright RBAC checks, OWASP ZAP passive scan, `pip-audit`), Performance & Recovery (Grafana k6 1-VU & 5-VU runs, fault-injection recovery test). Co-author of Test Management. | Faisal Memon |
 
 ### 1.4 Test Environment & Test Data Strategy
 * **Operating System & Hardware:** Windows 10/11 64-bit, x86_64 multi-core CPU, 16 GB RAM.
@@ -68,10 +68,10 @@ where $O$ = Optimistic hours, $M$ = Most Likely hours, and $P$ = Pessimistic hou
 
 | WBS Area | Owner | Optimistic ($O$) | Most Likely ($M$) | Pessimistic ($P$) | Expected Effort $E$ (hrs) | Std. Dev. $\sigma$ (hrs) | Actual Effort (hrs) | Variance ($\text{Actual} - E$) |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1. System Scope, Seed/Reset & Test Plan/Risk Register** | All (Lead: Faisal) | 5.0 | 7.0 | 11.0 | **7.33** | 1.00 | *7.50* | *+0.17* |
-| **2. SonarQube Static Analysis & Hand-Calculated CFG** | Faisal (`24I-3032`) | 3.0 | 4.5 | 7.0 | **4.67** | 0.67 | *4.50* | *-0.17* |
-| **3. White-Box Unit Tests (100% Cov, MCC & MC/DC)** | Faisal (`24I-3032`) | 8.0 | 11.0 | 16.0 | **11.33** | 1.33 | *TBD (Step 2)* | *TBD* |
-| **4. Mutation Testing (`mutmut`, Custom Ops) & CI Gate** | Faisal (`24I-3032`) | 6.0 | 9.0 | 14.0 | **9.33** | 1.33 | *TBD (Step 2)* | *TBD* |
+| **1. System Scope, Seed/Reset & Test Plan/Risk Register** | All (Lead: Faisal Memon) | 5.0 | 7.0 | 11.0 | **7.33** | 1.00 | *7.50* | *+0.17* |
+| **2. SonarQube Static Analysis & Hand-Calculated CFG** | Faisal Memon (`24I-3032`) | 3.0 | 4.5 | 7.0 | **4.67** | 0.67 | *4.50* | *-0.17* |
+| **3. White-Box Unit Tests (100% Cov, MCC & MC/DC)** | Faisal Memon (`24I-3032`) | 8.0 | 11.0 | 16.0 | **11.33** | 1.33 | *TBD (Step 2)* | *TBD* |
+| **4. Mutation Testing (`mutmut`, Custom Ops) & CI Gate** | Faisal Memon (`24I-3032`) | 6.0 | 9.0 | 14.0 | **9.33** | 1.33 | *TBD (Step 2)* | *TBD* |
 | **5. OpenAPI Spec & Automated EP / 3-Point BVA Generator** | Hassan (`24I-3011`) | 5.0 | 7.5 | 11.0 | **7.67** | 1.00 | *TBD (Step 3)* | *TBD* |
 | **6. API & Cross-Workflow Integration Test Suite** | Hassan (`24I-3011`) | 7.0 | 9.5 | 14.0 | **9.83** | 1.17 | *TBD (Step 3)* | *TBD* |
 | **7. Use Case Specs (6) & Playwright E2E Automation** | Salman (`24I-3004`) | 7.0 | 10.0 | 15.0 | **10.33** | 1.33 | *TBD (Step 4)* | *TBD* |

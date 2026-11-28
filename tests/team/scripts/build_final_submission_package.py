@@ -3,9 +3,9 @@ SE3002 Software Quality Engineering — Section C
 Final Submission Package Builder:
   1. Compiles all 7 project reports (Sections 1-7) and all Step 1-5 evidence screenshots
      into a self-contained HTML master report and renders it via headless Microsoft Edge
-     to `d:\SQE Project\Project_24I-3032_24I-3011_24I-3004_C.pdf`.
+     to `d:/SQE Project/Project_24I-3032_24I-3011_24I-3004_C.pdf`.
   2. Packages the full Git repository (including `.git`, all branches, source code, tests,
-     reports, and evidence) into `d:\SQE Project\Project_24I-3032_24I-3011_24I-3004_C.zip`
+     reports, and evidence) into `d:/SQE Project/Project_24I-3032_24I-3011_24I-3004_C.zip`
      (excluding transient `.venv` and `node_modules` build caches so the archive is clean and portable).
 """
 
@@ -87,7 +87,7 @@ def build_master_html() -> Path:
         </thead>
         <tbody>
           <tr>
-            <td><strong>Faisal</strong></td>
+            <td><strong>Faisal Memon</strong></td>
             <td><code>24I-3032</code></td>
             <td>Section C</td>
             <td><code>faisalmemon353</code></td>
@@ -101,7 +101,7 @@ def build_master_html() -> Path:
             <td>Area 2: OpenAPI 3.0 Specification, Automated EP (82 partitions) &amp; 3-Point BVA (117 values) Test Data Generator, 2-Constraint Viva Diff Demonstration, and 33 API &amp; Cross-Workflow Integration Tests (PR #3) + Shared Management</td>
           </tr>
           <tr>
-            <td><strong>Salman Ahmed</strong></td>
+            <td><strong>Salman Ahmad</strong></td>
             <td><code>24I-3004</code></td>
             <td>Section C</td>
             <td><code>Salman-ahmed-2</code></td>
@@ -110,6 +110,7 @@ def build_master_html() -> Path:
         </tbody>
       </table>
       <div class="cover-meta">
+        <p><strong>Submitted to:</strong> Anum Kaleem</p>
         <p><strong>System Under Test (SUT):</strong> InvenTree (<code>https://github.com/inventree/InvenTree</code>) | <strong>License:</strong> MIT</p>
         <p><strong>Baseline Commit Hash:</strong> <code>b686d7cb64e0b09644d9e9afb0ce4997dfde0c1d</code> (Tag: <code>upstream-b686d7cb64e0b09644d9e9afb0ce4997dfde0c1d</code>)</p>
         <p><strong>Team Repository:</strong> <code>https://github.com/faisalmemon353/InvenTree-Project</code></p>
